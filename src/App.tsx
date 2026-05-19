@@ -1,18 +1,23 @@
-import { useState } from 'react';
-import { Button } from './components/Button';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import Layout from './components/Layout';
+import Favorites from './pages/Favorites';
+import Home from './pages/Home';
+import MealPlan from './pages/MealPlan';
+import MyRecipes from './pages/MyRecipes';
+import Pantry from './pages/Pantry';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8">
-        Smart Recipe Book
-      </h1>
-      <Button onClick={() => setCount((count) => count + 1)}>
-        Count is {count}
-      </Button>
-    </div>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="my-recipes" element={<MyRecipes />} />
+        <Route path="pantry" element={<Pantry />} />
+        <Route path="meal-plan" element={<MealPlan />} />
+        <Route path="favorites" element={<Favorites />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
   );
 }
 
