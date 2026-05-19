@@ -1,1 +1,14 @@
 @import 'tailwindcss';
+
+:root {
+  --page-bg: #f9fafb;
+  --brand: #ff6900;
+  --text-primary: #111827;
+  --text-muted: #6b7280;
+  --gray-button: #f3f4f6;
+}
+
+body {
+  background-color: var(--page-bg);
+  color: var(--text-primary);
+}
