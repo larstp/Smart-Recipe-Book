@@ -7,6 +7,7 @@ export default function Layout() {
     { to: '/pantry', label: 'Pantry' },
     { to: '/meal-plan', label: 'Meal Plan' },
     { to: '/favorites', label: 'Favorites' },
+    { to: '/login', label: 'Log In' },
   ];
 
   const linkClass = (isActive: boolean) =>
@@ -57,16 +58,24 @@ export default function Layout() {
                 Hi, example!{' '}
                 {/* This will be based on the users logged in/out state laterr */}
               </span>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-gray-700 bg-(--gray-button) hover:bg-(--gray-button)"
+
+              <NavLink
+                to="/login"
+                type="link"
+                className={({ isActive }) =>
+                  `inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-gray-700 ${
+                    isActive
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-(--gray-button) hover:bg-(--gray-button)'
+                  }`
+                }
               >
                 <span
                   className="w-3.5 h-3.5 bg-gray-300 rounded-full"
-                  aria-hidden
+                  aria-hidden="true"
                 />
                 Log In
-              </button>
+              </NavLink>
             </div>
           </div>
         </div>

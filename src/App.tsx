@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import MealPlan from './pages/MealPlan';
 import MyRecipes from './pages/MyRecipes';
 import Pantry from './pages/Pantry';
+import Login from './pages/Login';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="meal-plan" element={<MealPlan />} />
         <Route path="favorites" element={<Favorites />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="login" element={<Login />} />
       </Route>
     </Routes>
   );
