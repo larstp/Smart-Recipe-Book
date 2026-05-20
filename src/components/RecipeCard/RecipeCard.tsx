@@ -1,6 +1,6 @@
 import { CATEGORY_STYLES, DIFFICULTY_VARIANTS } from './variants';
 import type { Recipe } from '../../services/models/index';
-import { Badge } from '../Badge';
+import { Badge } from '../badge/Badge';
 
 export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   const totalTime = recipe.prepTime + recipe.cookTime;
