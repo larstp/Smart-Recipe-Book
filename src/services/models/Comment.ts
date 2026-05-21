@@ -1,5 +1,5 @@
 import type { Profile } from './Profile';
-import type { Recipe } from './recipe';
+import type { Recipe } from './Recipe';
 
 export interface Comment {
   id: number;
