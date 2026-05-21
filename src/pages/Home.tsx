@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard/RecipeCard';
+import { getAllRecipes } from '../services/api/recipes';
 import type { Recipe } from '../services/models/index';
 
 export default function Home() {
@@ -16,16 +17,8 @@ export default function Home() {
       setError(null);
 
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BASE_API_URL}/recipes`,
-        );
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch recipes: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setRecipes(data.data || data);
+        const data = await getAllRecipes();
+        setRecipes(data);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : 'An unknown error occurred',
