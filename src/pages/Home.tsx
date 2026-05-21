@@ -103,7 +103,7 @@ export default function Home() {
           <p className="text-gray-600 mb-6">{recipes.length} recipes found</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recipes.map((recipe) => (
-              <Link key={recipe.id} to={`/recipes/${recipe.id}`}>
+              <Link key={recipe.id} to={`/my-recipes/${recipe.id}`}>
                 <RecipeCard recipe={recipe} />
               </Link>
             ))}
