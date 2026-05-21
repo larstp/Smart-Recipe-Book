@@ -1,8 +1,9 @@
 import type { Profile } from './Profile';
 import type { Comment } from './Comment';
+import type { Ingredient } from './Ingredient';
 
 export interface Recipe {
-  id: number;
+  id: string;
   title: string;
   description: string;
   prepTime: number;
@@ -10,7 +11,7 @@ export interface Recipe {
   servings: number;
   difficulty: string;
   category: string;
-  ingredients: Array<object>;
+  ingredients: Array<Ingredient>;
   instructions: Array<string>;
   tags: Array<string>;
   image: {
