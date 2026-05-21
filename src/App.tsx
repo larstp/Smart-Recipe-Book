@@ -6,6 +6,7 @@ import Pantry from './pages/Pantry';
 import MealPlan from './pages/MealPlan';
 import MyRecipes from './pages/my-recipes/MyRecipes';
 import { RecipeDetails } from './pages/my-recipes/[id]';
+import Recipe from './pages/Recipe';
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
           <Route index element={<MyRecipes />} />
           <Route path=":id" element={<RecipeDetails id={1} />} />
         </Route>
+
+        <Route path="recipes/:id" element={<Recipe />} />
 
         <Route path="pantry" element={<Pantry />} />
         <Route path="meal-plan" element={<MealPlan />} />

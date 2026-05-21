@@ -6,19 +6,30 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   const totalTime = recipe.prepTime + recipe.cookTime;
   const sharedClasses = 'absolute bottom-4 left-4 z-50';
 
-  const categoryClass = CATEGORY_STYLES[recipe.category];
-  const difficultyVariant = DIFFICULTY_VARIANTS[recipe.difficulty];
+  const categoryClass =
+    CATEGORY_STYLES[recipe.category.toLowerCase()] ||
+    'bg-gray-100 text-gray-700';
+  const difficultyVariant =
+    DIFFICULTY_VARIANTS[recipe.difficulty.toLowerCase()];
+
+  // ------------ Capitalize first letter for display (since the badge colours are based on the lowercase value)
+  const displayCategory =
+    recipe.category.charAt(0).toUpperCase() +
+    recipe.category.slice(1).toLowerCase();
+  const displayDifficulty =
+    recipe.difficulty.charAt(0).toUpperCase() +
+    recipe.difficulty.slice(1).toLowerCase();
 
   return (
     <div className="flex flex-wrap gap-2 max-w-96 justify-center rounded-lg shadow-md overflow-hidden hover:scale-102 transition duration-(--duration)">
       <div className="relative w-full aspect-video">
         <Badge
-          text={recipe.category}
+          text={displayCategory}
           classes={`${categoryClass} ${sharedClasses}`}
         />
         <img
-          src={recipe.image.url}
-          alt={recipe.image.alt}
+          src={recipe.image?.url || 'Public/NO_IMAGE.svg'}
+          alt={recipe.image?.alt || recipe.title}
           className="w-full h-full object-cover justify-self-center rounded-t-lg border-b border-b-gray-200"
           // remove the bottom-border once we've got good images
         />
@@ -44,7 +55,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
             />
             <p>{recipe.servings} servings</p>
           </div>
-          <Badge text={recipe.difficulty} variant={difficultyVariant} />
+          <Badge text={displayDifficulty} variant={difficultyVariant} />
         </div>
 
         <p className="text-xs text-(--text-muted)">by {recipe.owner.name}</p>
