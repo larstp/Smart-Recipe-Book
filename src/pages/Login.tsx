@@ -61,31 +61,38 @@ export default function Login() {
 
   return (
     <main className="container mx-auto p-6">
-      <img rel="icon" src="/loginpage.svg" className="" />
-      <h1 className="text-2xl font-bold">Welcome Back</h1>
-      <p className="text-gray-500">Log in to access your recipes</p>
+      <img src="/loginpage.svg" className="mx-auto w-14 h-14 mb-4" />
+      <h1 className="text-3xl font-bold text-center mb-2">Welcome Back</h1>
+      <p className="text-gray-500 text-center">Log in to access your recipes</p>
 
-      <form className="" onSubmit={handleSubmit}>
+      <form
+        className="w-full mx-auto max-w-md bg-white rounded-lg shadow-md p-6 mt-8"
+        onSubmit={handleSubmit}
+      >
         {/* email */}
-        <label>Email</label>
+        <label className="text-sm font-semibold">Email</label>
         <div>
           <input
+            className="w-full border border-gray-200 rounded-lg pl-4 pt-1.5 pb-1.5 text-sm mb-4 mt-1"
             type="text"
             name="email"
-            placeholder="Example@email.com"
+            placeholder="your@email.com"
             value={formData.email}
             onChange={handleChange}
           />
-          {errors.email && <p className="">&#11205;{errors.email}</p>}
+          {errors.email && (
+            <p className="mt-0 text-red">&#11205;{errors.email}</p>
+          )}
         </div>
 
         {/* password */}
-        <label>Password</label>
+        <label className="text-sm font-semibold">Password</label>
         <div>
           <input
+            className="w-full border border-gray-200 rounded-lg pl-4 pt-1.5 pb-1.5 text-sm mb-4 mt-1"
             type="password"
             name="password"
-            placeholder="***"
+            placeholder="********"
             value={formData.password}
             onChange={handleChange}
           />
@@ -93,12 +100,18 @@ export default function Login() {
         </div>
 
         {/* button */}
-        <button className="" type="submit">
+        <button
+          className="w-full bg-orange-500 text-white pt-2 pb-2 rounded-lg text-sm font-semibold mb-5"
+          type="submit"
+        >
           Log In
         </button>
 
-        <p className="">
-          Don't have an account? <Link to="/register">Register</Link>
+        <p className="text-center text-gray-500 text-sm">
+          Don't have an account?{' '}
+          <Link to="/register" className="text-orange-500 font-semibold">
+            Register
+          </Link>
         </p>
       </form>
     </main>
