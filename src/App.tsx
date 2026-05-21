@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Pantry from './pages/Pantry';
 import MealPlan from './pages/MealPlan';
 import MyRecipes from './pages/my-recipes/MyRecipes';
-import { RecipeDetails } from './pages/my-recipes/[id]';
+import RecipeDetails from './pages/my-recipes/[id]';
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
 
         <Route path="my-recipes">
           <Route index element={<MyRecipes />} />
-          <Route path=":id" element={<RecipeDetails id={1} />} />
+          <Route path=":id" element={<RecipeDetails />} />
         </Route>
 
         <Route path="pantry" element={<Pantry />} />
