@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import { getAllRecipes } from '../../services/api/recipes';
 import type { Recipe } from '../../services/models';
+import { Button } from '../../components/Button';
 
 export default function MyRecipes() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -34,12 +35,27 @@ export default function MyRecipes() {
     };
   }, []);
 
+  const goToNewRecipe = () => {
+    window.location.href = '/new-recipe';
+  };
+
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold">My Recipes</h1>
 
       {loading && <p className="mt-2 text-gray-600">Loading recipes...</p>}
       {error && <p className="mt-2 text-red-600">Error: {error.message}</p>}
+
+      {/* Placeholder btn for the testing the Create recipe page form */}
+      <div className="justify-self-end">
+        <Button
+          onClick={goToNewRecipe}
+          variant="primary"
+          className="bg-orange-400 hover:bg-orange-500"
+        >
+          Create Recipe
+        </Button>
+      </div>
 
       {!loading && !error && (
         <div className="flex flex-wrap w-full gap-6 mt-4">

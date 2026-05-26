@@ -48,8 +48,8 @@ export default function RecipeDetails() {
     <div className="container mx-auto p-6">
       <div className="grid gap-8 justify-center max-w-200 justify-self-center">
         <img
-          src={recipe.image.url}
-          alt={recipe.image.alt}
+          src={recipe?.image?.url}
+          alt={recipe?.image?.alt}
           className="mb-4 max-w-150 h-auto rounded-lg object-cover justify-self-center"
         />
 
