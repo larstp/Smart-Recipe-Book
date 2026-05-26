@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import LoginButton from './LoginButton';
 
 export default function Layout() {
   const navItems = [
@@ -7,13 +8,16 @@ export default function Layout() {
     { to: '/pantry', label: 'Pantry' },
     { to: '/meal-plan', label: 'Meal Plan' },
     { to: '/favorites', label: 'Favorites' },
-    { to: '/login', label: 'Log In' },
   ];
 
   const linkClass = (isActive: boolean) =>
     `flex items-center gap-2 px-3 py-1 rounded-md text-sm transition-colors ${
       isActive ? 'text-[var(--brand)]' : 'text-gray-600 hover:text-gray-900'
     }`;
+
+  // different header for Login page
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -34,22 +38,29 @@ export default function Layout() {
 
             <nav className="flex items-center justify-center gap-1 justify-self-center">
               <div className="flex items-center gap-1">
-                {navItems.map((item) => (
+                {isLoginPage ? (
                   <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.to === '/'}
+                    to="/"
                     className={({ isActive }) =>
                       `${linkClass(isActive)} whitespace-nowrap`
                     }
                   >
-                    <span
-                      className="w-4 h-4 bg-gray-200 rounded-full"
-                      aria-hidden
-                    />
-                    <span>{item.label}</span>
+                    <span>Home</span>
                   </NavLink>
-                ))}
+                ) : (
+                  navItems.map((item) => (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      end={item.to === '/'}
+                      className={({ isActive }) =>
+                        `${linkClass(isActive)} whitespace-nowrap`
+                      }
+                    >
+                      <span>{item.label}</span>
+                    </NavLink>
+                  ))
+                )}
               </div>
             </nav>
 
@@ -59,23 +70,7 @@ export default function Layout() {
                 {/* This will be based on the users logged in/out state laterr */}
               </span>
 
-              <NavLink
-                to="/login"
-                type="link"
-                className={({ isActive }) =>
-                  `inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-gray-700 ${
-                    isActive
-                      ? 'bg-orange-500 text-white'
-                      : 'bg-(--gray-button) hover:bg-(--gray-button)'
-                  }`
-                }
-              >
-                <span
-                  className="w-3.5 h-3.5 bg-gray-300 rounded-full"
-                  aria-hidden="true"
-                />
-                Log In
-              </NavLink>
+              <LoginButton />
             </div>
           </div>
         </div>
