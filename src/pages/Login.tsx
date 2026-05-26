@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { LoginFormData, LoginFormError } from '../types/loginForm';
+import { useAuth } from '../context/useAuth';
+import { createApiKey } from '../api/auth';
+import { STORAGE_KEYS } from '../constants/storage';
 
 export default function Login() {
   // Form state
@@ -11,6 +14,12 @@ export default function Login() {
 
   // Error state
   const [errors, setErrors] = useState<LoginFormError>({});
+
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   // handle input changes
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -32,30 +41,77 @@ export default function Login() {
     }
 
     // password validation
-    if (formData.password.trim().length < 3) {
-      newErrors.password = 'Password must be at least 3 characters';
+    if (formData.password.trim().length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
     }
 
     return newErrors;
   }
 
   // submit handler
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const validationErrors = validate();
+
     setErrors(validationErrors);
 
     // if no errors
-    if (Object.keys(validationErrors).length === 0) {
-      // clear errors
-      setErrors({});
+    if (Object.keys(validationErrors).length > 0) {
+      // show errors
+      setErrors(validationErrors);
 
-      // reset form
-      setFormData({
-        email: '',
-        password: '',
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setApiError('');
+
+      const response = await fetch('https://v2.api.noroff.dev/auth/login', {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json',
+        },
+
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
       });
+
+      const data = await response.json();
+
+      // API validation error
+      if (!response.ok) {
+        throw new Error(data.error?.message || 'invalid credentils');
+      }
+
+      const accessToken = data.data.accessToken;
+
+      const user = {
+        name: data.data.name,
+        email: data.data.email,
+      };
+
+      // login user
+      login(accessToken, user);
+
+      // create API key
+      const apiKeyResponse = await createApiKey(accessToken);
+
+      // save api key
+      localStorage.setItem(STORAGE_KEYS.API_KEY, apiKeyResponse.data.key);
+
+      // redirect home
+      navigate('/');
+    } catch (error) {
+      if (error instanceof Error) {
+        setApiError(error.message);
+      }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -99,12 +155,16 @@ export default function Login() {
           {errors.password && <p className="">&#11205;{errors.password}</p>}
         </div>
 
+        {/* api error */}
+        {apiError && <p className="text-red-500 text-sm-mb-4">{apiError}</p>}
+
         {/* button */}
         <button
-          className="w-full bg-orange-500 text-white pt-2 pb-2 rounded-lg text-sm font-semibold mb-5"
+          className="w-full bg-orange-500 text-white pt-2 pb-2 rounded-lg text-sm font-semibold mb-5 disabled:opacity-50"
           type="submit"
+          disabled={loading}
         >
-          Log In
+          {loading ? 'Logging in..' : 'Log In'}
         </button>
 
         <p className="text-center text-gray-500 text-sm">
