@@ -116,20 +116,25 @@ export default function Login() {
   }
 
   return (
-    <main className="container mx-auto p-6">
-      <img src="/loginpage.svg" className="mx-auto w-14 h-14 mb-4" />
-      <h1 className="text-3xl font-bold text-center mb-2">Welcome Back</h1>
+    <main className="container mx-auto px-4 py-6 sm:p-6">
+      <img
+        src="/loginpage.svg"
+        className="mx-auto w-12 h-12 sm:w-14 sm:h-14 mb-4"
+      />
+      <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2">
+        Welcome Back
+      </h1>
       <p className="text-gray-500 text-center">Log in to access your recipes</p>
 
       <form
-        className="w-full mx-auto max-w-md bg-white rounded-lg shadow-md p-6 mt-8"
+        className="w-full mx-auto max-w-md bg-white rounded-lg shadow-md p-4 sm:p-6 mt-6 sm:mt-8"
         onSubmit={handleSubmit}
       >
         {/* email */}
         <label className="text-sm font-semibold">Email</label>
         <div>
           <input
-            className="w-full border border-gray-200 rounded-lg pl-4 pt-1.5 pb-1.5 text-sm mb-4 mt-1"
+            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 sm:py-1.5 text-sm mb-4 mt-1"
             type="text"
             name="email"
             placeholder="your@email.com"
@@ -145,7 +150,7 @@ export default function Login() {
         <label className="text-sm font-semibold">Password</label>
         <div>
           <input
-            className="w-full border border-gray-200 rounded-lg pl-4 pt-1.5 pb-1.5 text-sm mb-4 mt-1"
+            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 sm:py-1.5 text-sm mb-4 mt-1"
             type="password"
             name="password"
             placeholder="********"
@@ -160,7 +165,7 @@ export default function Login() {
 
         {/* button */}
         <button
-          className="w-full bg-orange-500 text-white pt-2 pb-2 rounded-lg text-sm font-semibold mb-5 disabled:opacity-50"
+          className="w-full bg-orange-500 text-white py-3 sm:py-2 rounded-lg text-sm font-semibold mb-5 disabled:opacity-50"
           type="submit"
           disabled={loading}
         >
