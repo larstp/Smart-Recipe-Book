@@ -1,7 +1,10 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import LoginButton from './LoginButton';
+import { useAuth } from '../context/useAuth';
 
 export default function Layout() {
+  const { user } = useAuth();
+
   const navItems = [
     { to: '/', label: 'Home' },
     { to: '/my-recipes', label: 'My Recipes' },
@@ -64,11 +67,13 @@ export default function Layout() {
               </div>
             </nav>
 
+            {/* show username after login */}
             <div className="flex items-center justify-self-end gap-3">
-              <span className="text-sm text-gray-500 hidden sm:inline">
-                Hi, example!{' '}
-                {/* This will be based on the users logged in/out state laterr */}
-              </span>
+              {user && (
+                <span className="text-sm text-gray-500 hidden sm:inline">
+                  Hi, {user.name}!
+                </span>
+              )}
 
               <LoginButton />
             </div>

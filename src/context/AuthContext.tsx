@@ -7,7 +7,11 @@ type User = {
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem('user');
+
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   const [token, setToken] = useState<string | null>(
     localStorage.getItem('token'),
@@ -16,12 +20,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   function login(token: string, user: User) {
     localStorage.setItem('token', token);
 
+    localStorage.setItem('user', JSON.stringify(user));
+
     setToken(token);
     setUser(user);
   }
 
   function logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
 
     setToken(null);
     setUser(null);
