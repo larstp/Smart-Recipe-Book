@@ -3,6 +3,9 @@ import { useState, type SubmitEvent } from 'react';
 import { Button } from '../Button';
 import { Input } from './Input';
 import { Select } from './Select';
+import { IngredientList } from './IngredientList';
+import { InstructionsList } from './InstructionsList';
+import { TagsList } from './TagsList';
 import { postNewRecipe } from '../../services/api/recipes';
 import { constructPayload } from '../../lib/helpers/constructPayload';
 import { errorMessage } from '../../lib/errorMessage';
@@ -123,26 +126,7 @@ export default function RecipeForm() {
 
       <div>
         <h2 className="text-lg font-semibold">Ingredient List</h2>
-        <div className="grid grid-cols-3 gap-1 items-center">
-          <Input id="name" type="text" name="name" label="Name" />
-          <Input id="quantity" type="number" name="quantity" label="Quantity" />
-          <Select
-            id="unit"
-            name="unit"
-            label="Unit"
-            options={['piece', 'g', 'ml', 'cup', 'tbsp', 'tsp', 'oz', 'lb']}
-          />
-        </div>
-        <div className="grid grid-cols-3 gap-1 items-center">
-          <Input id="name" type="text" name="name" label="Name" />
-          <Input id="quantity" type="number" name="quantity" label="Quantity" />
-          <Select
-            id="unit"
-            name="unit"
-            label="Unit"
-            options={['piece', 'g', 'ml', 'cup', 'tbsp', 'tsp', 'oz', 'lb']}
-          />
-        </div>
+        <IngredientList />
         {inputErrors.ingredients && (
           <p className="text-red-500 mt-2">
             {inputErrors.ingredients || apiMessage('ingredients')}
@@ -150,13 +134,22 @@ export default function RecipeForm() {
         )}
       </div>
 
-      <Input
-        id="instructions"
-        type="text"
-        name="instructions"
-        label="Instructions (comma separated)"
-        error={inputErrors.instructions || apiMessage('instructions')}
-      />
+      <div>
+        <h2 className="text-lg font-semibold">Instructions List</h2>
+        <InstructionsList />
+        {inputErrors.instructions && (
+          <p className="text-red-500 mt-2">
+            {inputErrors.instructions || apiMessage('instructions')}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <h2 className="text-lg font-semibold">Tags List</h2>
+        <p className="text-xs">Press 'Enter' to add a tag</p>
+        <TagsList />
+      </div>
+
       <Button
         disabled={disabled}
         type="submit"
