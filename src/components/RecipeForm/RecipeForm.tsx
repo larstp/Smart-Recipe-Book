@@ -40,7 +40,7 @@ export default function RecipeForm() {
       navigate(`/my-recipes/${data.id}`);
     } catch (error) {
       setApiErrors([errorMessage(error)]);
-      toast.error(errorMessage(error));
+      toast.error("Something went wrong. Couldn't add recipe.");
     } finally {
       setDisabled(false);
     }
