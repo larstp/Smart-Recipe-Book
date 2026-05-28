@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import { Input } from './Input';
 import { Button } from '../Button';
 
 type InstructionsRow = {
@@ -47,12 +46,10 @@ export const InstructionsList = () => {
                   {index + 1}.
                 </span>
 
-                <Input
+                <textarea
                   id={fieldName}
-                  type="text"
                   name={fieldName}
-                  placeholder={`Describe step ${index + 1}`}
-                  classes="w-full border-b rounded-none"
+                  className="w-full border-b rounded-none"
                   aria-label={`Instruction step ${index + 1}`}
                 />
 
