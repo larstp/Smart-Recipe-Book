@@ -6,6 +6,7 @@ import MealPlan from './pages/MealPlan';
 import MyRecipes from './pages/MyRecipes';
 import Pantry from './pages/Pantry';
 import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="favorites" element={<Favorites />} />
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Route>
     </Routes>
   );
