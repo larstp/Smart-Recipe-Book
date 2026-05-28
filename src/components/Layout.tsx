@@ -18,9 +18,11 @@ export default function Layout() {
       isActive ? 'text-[var(--brand)]' : 'text-gray-600 hover:text-gray-900'
     }`;
 
-  // different header for Login page
+  // different header for auth pages
   const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
+
+  const isAuthPage =
+    location.pathname === '/login' || location.pathname === '/register';
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -41,7 +43,7 @@ export default function Layout() {
 
             <nav className="flex items-center justify-center gap-1 justify-self-center">
               <div className="flex items-center gap-1">
-                {isLoginPage ? (
+                {isAuthPage ? (
                   <NavLink
                     to="/"
                     className={({ isActive }) =>
