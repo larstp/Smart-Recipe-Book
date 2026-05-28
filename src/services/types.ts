@@ -2,9 +2,13 @@ type EndpointResolver<TArgs extends unknown[]> =
   | string
   | ((...args: TArgs) => string);
 
+type InitResolver<TArgs extends unknown[]> =
+  | RequestInit
+  | ((...args: TArgs) => RequestInit);
+
 export type ApiConfig<TArgs extends unknown[] = []> = {
   endpoint: EndpointResolver<TArgs>;
-  init?: RequestInit;
+  init?: InitResolver<TArgs>;
   baseUrl?: string;
 };
 

@@ -14,7 +14,7 @@ export interface Recipe {
   ingredients: Array<Ingredient>;
   instructions: Array<string>;
   tags: Array<string>;
-  image: {
+  image?: {
     url: string;
     alt: string;
   };
