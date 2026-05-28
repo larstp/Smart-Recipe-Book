@@ -3,9 +3,12 @@ import Layout from './components/Layout';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import Pantry from './pages/Pantry';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import MealPlan from './pages/MealPlan';
 import MyRecipes from './pages/my-recipes/MyRecipes';
 import RecipeDetails from './pages/my-recipes/[id]';
+import NewRecipe from './pages/NewRecipe';
 
 function App() {
   return (
@@ -20,8 +23,11 @@ function App() {
 
         <Route path="pantry" element={<Pantry />} />
         <Route path="meal-plan" element={<MealPlan />} />
+        <Route path="new-recipe" element={<NewRecipe />} />
         <Route path="favorites" element={<Favorites />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Route>
     </Routes>
   );
