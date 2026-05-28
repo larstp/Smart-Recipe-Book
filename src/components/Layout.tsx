@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import LoginButton from './LoginButton';
 import { useAuth } from '../context/useAuth';
+import { Toaster } from 'react-hot-toast';
 
 export default function Layout() {
   const { user } = useAuth();
@@ -26,6 +27,32 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            color: '#1e40af',
+            backgroundColor: '#dbeafe',
+            border: '1px solid #93c5fd',
+          },
+          success: {
+            style: {
+              color: '#166534',
+              backgroundColor: '#f0fdf4',
+              border: '1px solid #86efac',
+            },
+          },
+          error: {
+            style: {
+              color: '#991b1b',
+              backgroundColor: '#fef2f2',
+              border: '1px solid #fca5a5',
+            },
+          },
+        }}
+      />
+
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-3 items-center h-16">
