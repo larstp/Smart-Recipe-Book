@@ -1,7 +1,11 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import LoginButton from './LoginButton';
+import { useAuth } from '../context/useAuth';
 import { Toaster } from 'react-hot-toast';
 
 export default function Layout() {
+  const { user } = useAuth();
+
   const navItems = [
     { to: '/', label: 'Home' },
     { to: '/my-recipes', label: 'My Recipes' },
@@ -14,6 +18,12 @@ export default function Layout() {
     `flex items-center gap-2 px-3 py-1 rounded-md text-sm transition-colors ${
       isActive ? 'text-[var(--brand)]' : 'text-gray-600 hover:text-gray-900'
     }`;
+
+  // different header for auth pages
+  const location = useLocation();
+
+  const isAuthPage =
+    location.pathname === '/login' || location.pathname === '/register';
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -60,40 +70,41 @@ export default function Layout() {
 
             <nav className="flex items-center justify-center gap-1 justify-self-center">
               <div className="flex items-center gap-1">
-                {navItems.map((item) => (
+                {isAuthPage ? (
                   <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.to === '/'}
+                    to="/"
                     className={({ isActive }) =>
                       `${linkClass(isActive)} whitespace-nowrap`
                     }
                   >
-                    <span
-                      className="w-4 h-4 bg-gray-200 rounded-full"
-                      aria-hidden
-                    />
-                    <span>{item.label}</span>
+                    <span>Home</span>
                   </NavLink>
-                ))}
+                ) : (
+                  navItems.map((item) => (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      end={item.to === '/'}
+                      className={({ isActive }) =>
+                        `${linkClass(isActive)} whitespace-nowrap`
+                      }
+                    >
+                      <span>{item.label}</span>
+                    </NavLink>
+                  ))
+                )}
               </div>
             </nav>
 
+            {/* show username after login */}
             <div className="flex items-center justify-self-end gap-3">
-              <span className="text-sm text-gray-500 hidden sm:inline">
-                Hi, example!{' '}
-                {/* This will be based on the users logged in/out state laterr */}
-              </span>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-gray-700 bg-(--gray-button) hover:bg-(--gray-button)"
-              >
-                <span
-                  className="w-3.5 h-3.5 bg-gray-300 rounded-full"
-                  aria-hidden
-                />
-                Log In
-              </button>
+              {user && (
+                <span className="text-sm text-gray-500 hidden sm:inline">
+                  Hi, {user.name}!
+                </span>
+              )}
+
+              <LoginButton />
             </div>
           </div>
         </div>
