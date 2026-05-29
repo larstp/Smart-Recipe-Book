@@ -94,7 +94,7 @@ export default function Layout() {
 
       <header className="relative z-100 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex h-16 items-center justify-between md:hidden">
+          <div className="flex h-16 items-center justify-between lg:hidden">
             <Link
               to="/"
               className="flex items-center gap-3 justify-self-start ml-6 md:ml-8"
@@ -131,7 +131,7 @@ export default function Layout() {
             </button>
           </div>
 
-          <div className="hidden h-16 grid-cols-3 items-center md:grid">
+          <div className="hidden h-16 grid-cols-3 items-center lg:grid">
             <Link
               to="/"
               className="flex items-center gap-3 justify-self-start ml-6 md:ml-8"
@@ -187,7 +187,7 @@ export default function Layout() {
         </div>
 
         <div
-          className={`fixed inset-0 top-16 z-90 md:hidden transition-opacity duration-300 ease-out ${
+          className={`fixed inset-0 top-16 z-90 lg:hidden transition-opacity duration-300 ease-out ${
             isMobileMenuOpen
               ? 'pointer-events-auto opacity-100'
               : 'pointer-events-none opacity-0'
