@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import { getAllRecipes } from '../../services/api/recipes';
 import type { Recipe } from '../../services/models';
+import { useAuth } from '../../context/useAuth';
 
 export default function MyRecipes() {
+  const { user } = useAuth();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
@@ -13,15 +15,14 @@ export default function MyRecipes() {
     let cancelled = false;
 
     getAllRecipes()
-      .then(() => {
+      .then((data) => {
         if (cancelled) return;
 
-        // TODO:
-        // 1. Filter recipes by the logged in user once auth is implemented
-        // Example:
-        // const myRecipes = data.filter(recipe => recipe.owner.email === currentUser.email);
+        const myRecipes = data.filter(
+          (recipe) => recipe.owner?.email === user?.email,
+        );
 
-        setRecipes([]);
+        setRecipes(myRecipes);
         setError(null);
       })
       .catch((error: unknown) => {
@@ -40,7 +41,7 @@ export default function MyRecipes() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [user]);
 
   return (
     <div className="container mx-auto p-6">
@@ -53,7 +54,7 @@ export default function MyRecipes() {
         </div>
 
         <Link
-          to="/create-recipe"
+          to="/new-recipe"
           className="rounded-md bg-[#ff6900] px-4 py-2 font-medium text-white"
         >
           + Create Recipe
@@ -76,7 +77,7 @@ export default function MyRecipes() {
           </p>
 
           <Link
-            to="/create-recipe"
+            to="/new-recipe"
             className="mt-4 inline-block rounded bg-[#ff6900] px-4 py-2 text-white"
           >
             + Create your first recipe
