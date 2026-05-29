@@ -52,9 +52,10 @@ export default function Home() {
   }, []);
 
   const filteredRecipes = recipes.filter((recipe) => {
-    const matchesSearch = recipe.title
-      .toLowerCase()
-      .includes(debouncedSearch.toLowerCase());
+    const searchTerm = debouncedSearch.toLowerCase();
+    const matchesSearch =
+      recipe.title.toLowerCase().includes(searchTerm) ||
+      recipe.description.toLowerCase().includes(searchTerm);
 
     const matchesCategory =
       !selectedCategory ||
@@ -124,7 +125,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setSelectedCategory(null)}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                className={`cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition ${
                   selectedCategory === null
                     ? 'bg-orange-500 text-white shadow-sm'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -136,7 +137,7 @@ export default function Home() {
                 <button
                   key={category}
                   onClick={() => handleCategoryClick(category)}
-                  className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition ${
+                  className={`cursor-pointer rounded-full px-4 py-2 text-sm font-medium capitalize transition ${
                     selectedCategory === category
                       ? 'bg-orange-500 text-white shadow-sm'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -156,7 +157,7 @@ export default function Home() {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setSelectedDifficulty(null)}
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                  className={`cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition ${
                     selectedDifficulty === null
                       ? 'bg-orange-500 text-white shadow-sm'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -168,7 +169,7 @@ export default function Home() {
                   <button
                     key={difficulty}
                     onClick={() => handleDifficultyClick(difficulty)}
-                    className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition ${
+                    className={`cursor-pointer rounded-full px-4 py-2 text-sm font-medium capitalize transition ${
                       selectedDifficulty === difficulty
                         ? 'bg-orange-500 text-white shadow-sm'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -200,7 +201,7 @@ export default function Home() {
             <div className="mb-6">
               <button
                 onClick={clearAllFilters}
-                className="text-sm text-orange-600 hover:text-orange-700 font-medium underline"
+                className="cursor-pointer text-sm font-medium text-orange-600 underline hover:text-orange-700"
               >
                 Clear all filters
               </button>
