@@ -14,12 +14,16 @@ export default function MyRecipes() {
   useEffect(() => {
     let cancelled = false;
 
+    if (!user) {
+      return;
+    }
+
     getAllRecipes()
       .then((data) => {
         if (cancelled) return;
 
         const myRecipes = data.filter(
-          (recipe) => recipe.owner?.email === user?.email,
+          (recipe) => recipe.owner?.email === user.email,
         );
 
         setRecipes(myRecipes);
@@ -53,12 +57,14 @@ export default function MyRecipes() {
           </p>
         </div>
 
-        <Link
-          to="/new-recipe"
-          className="rounded-md bg-[#ff6900] px-4 py-2 font-medium text-white"
-        >
-          + Create Recipe
-        </Link>
+        {user && (
+          <Link
+            to="/new-recipe"
+            className="rounded-md bg-[#ff6900] px-4 py-2 font-medium text-white"
+          >
+            + Create Recipe
+          </Link>
+        )}
       </div>
 
       {loading && <p className="mt-2 text-gray-600">Loading recipes...</p>}
@@ -70,17 +76,19 @@ export default function MyRecipes() {
             +
           </div>
 
-          <h2 className="text-xl font-semibold w-full">No recipes yet</h2>
+          <h2 className="text-xl font-semibold w-full">
+            {user ? 'No recipes yet' : 'You are not logged in'}
+          </h2>
 
           <p className="text-gray-600 w-full">
             Start creating your own recipes and build your personal cookbook!
           </p>
 
           <Link
-            to="/new-recipe"
+            to={user ? '/new-recipe' : '/login'}
             className="mt-4 inline-block rounded bg-[#ff6900] px-4 py-2 text-white"
           >
-            + Create your first recipe
+            {user ? '+ Create your first recipe' : 'Log in to create recipes'}
           </Link>
         </div>
       )}
