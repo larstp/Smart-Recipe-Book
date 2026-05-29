@@ -22,19 +22,60 @@ export const validateNewRecipeForm = (form: HTMLFormElement): InputErrors => {
   if (!getValue('prepTime')) errors.prepTime = 'Prep time is required.';
   if (!getValue('cookTime')) errors.cookTime = 'Cook time is required.';
   if (!getValue('servings')) errors.servings = 'Servings is required.';
-  if (!getValue('instructions'))
-    errors.instructions = 'Instructions are required.';
   if (!getValue('category')) errors.category = 'Category is required.';
   if (!getValue('difficulty')) errors.difficulty = 'Difficulty is required.';
 
-  const names = formData.getAll('name').map((name) => String(name).trim());
-  const units = formData.getAll('unit').map((unit) => String(unit).trim());
-  const quantities = formData
-    .getAll('quantity')
-    .map((quantity) => String(quantity).trim());
+  const instructionsMap = new Map<number, string>();
 
-  const completeIngredientList = names.some(
-    (name, index) => name && quantities[index] && units[index],
+  const ingredientMap = new Map<
+    number,
+    { name?: string; quantity?: number; unit?: string }
+  >();
+
+  for (const [key, value] of formData.entries()) {
+    const instructionsMatch = key.match(/^instructions-(\d+)$/);
+    if (instructionsMatch) {
+      const index = Number(instructionsMatch[1]);
+      instructionsMap.set(index, String(value).trim());
+    }
+
+    const nameMatch = key.match(/^name-(\d+)$/);
+    const qntyMatch = key.match(/^quantity-(\d+)$/);
+    const unitMatch = key.match(/^unit-(\d+)$/);
+
+    if (nameMatch) {
+      const index = Number(nameMatch[1]);
+      ingredientMap.set(index, {
+        ...ingredientMap.get(index),
+        name: String(value).trim(),
+      });
+    }
+
+    if (qntyMatch) {
+      const index = Number(qntyMatch[1]);
+      ingredientMap.set(index, {
+        ...ingredientMap.get(index),
+        quantity: Number(value),
+      });
+    }
+
+    if (unitMatch) {
+      const index = Number(unitMatch[1]);
+      ingredientMap.set(index, {
+        ...ingredientMap.get(index),
+        unit: String(value).trim(),
+      });
+    }
+  }
+
+  const hasInstructions = [...instructionsMap.values()].some(Boolean);
+
+  if (!hasInstructions) {
+    errors.instructions = 'At least one instruction is required.';
+  }
+
+  const completeIngredientList = [...ingredientMap.values()].some(
+    (i) => i.name && i.quantity && i.unit,
   );
 
   if (!completeIngredientList) {

@@ -1,13 +1,22 @@
 type BadgeProps = {
   text: string;
+  close?: boolean;
+  onClick?: () => void;
   classes?: string;
   variant?: 'destructive' | 'warning' | 'success' | 'default';
 };
 
-export const Badge = ({ text, classes, variant }: BadgeProps) => {
+export const Badge = ({
+  text,
+  close,
+  onClick,
+  classes,
+  variant,
+}: BadgeProps) => {
   return (
     <span
-      className={`${classes} p-2 pt-1 pb-1 rounded-full text-xs
+      onClick={onClick}
+      className={`${classes} w-fit p-2 pt-1 pb-1 rounded-full text-xs
         ${
           variant === 'destructive'
             ? 'bg-red-100 text-red-700'
@@ -21,6 +30,7 @@ export const Badge = ({ text, classes, variant }: BadgeProps) => {
         }`}
     >
       {text}
+      {close && <span className="ml-2">&times;</span>}
     </span>
   );
 };
