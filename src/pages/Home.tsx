@@ -13,6 +13,11 @@ export default function Home() {
   const [searchInput, setSearchInput] = useState<string>('');
   const debouncedSearch = useDebounce(searchInput, 300);
 
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(
+    null,
+  );
+
   const panelClassName =
     'rounded-2xl border border-gray-200 bg-white/90 p-8 shadow-sm';
 
@@ -50,8 +55,33 @@ export default function Home() {
     const matchesSearch = recipe.title
       .toLowerCase()
       .includes(debouncedSearch.toLowerCase());
-    return matchesSearch;
+
+    const matchesCategory =
+      !selectedCategory ||
+      recipe.category.toLowerCase() === selectedCategory.toLowerCase();
+
+    const matchesDifficulty =
+      !selectedDifficulty ||
+      recipe.difficulty.toLowerCase() === selectedDifficulty.toLowerCase();
+
+    return matchesSearch && matchesCategory && matchesDifficulty;
   });
+
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(selectedCategory === category ? null : category);
+  };
+
+  const handleDifficultyClick = (difficulty: string) => {
+    setSelectedDifficulty(
+      selectedDifficulty === difficulty ? null : difficulty,
+    );
+  };
+
+  const clearAllFilters = () => {
+    setSearchInput('');
+    setSelectedCategory(null);
+    setSelectedDifficulty(null);
+  };
 
   return (
     <main className="container mx-auto px-6 py-8 max-w-7xl">
@@ -64,30 +94,119 @@ export default function Home() {
       </div>
 
       {!loading && !error && recipes.length > 0 && (
-        <div className="mb-6">
-          <div className="relative">
-            <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Search recipes by name or description..."
-              className="w-full rounded-full border border-gray-300 bg-white px-5 py-3 pl-12 text-sm shadow-sm transition focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
-            />
-            <svg
-              className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        <>
+          <div className="mb-6">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Search recipes by name or description..."
+                className="w-full rounded-xl border border-gray-300 px-5 py-3 pl-12 text-sm shadow-sm transition focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
               />
-            </svg>
+              <svg
+                className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
           </div>
-        </div>
+
+          <div className="mb-4">
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                  selectedCategory === null
+                    ? 'bg-orange-500 text-white shadow-sm'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                All Categories
+              </button>
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => handleCategoryClick(category)}
+                  className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition ${
+                    selectedCategory === category
+                      ? 'bg-orange-500 text-white shadow-sm'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="whitespace-nowrap text-sm font-medium text-gray-700">
+                Difficulty:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setSelectedDifficulty(null)}
+                  className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                    selectedDifficulty === null
+                      ? 'bg-orange-500 text-white shadow-sm'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  All
+                </button>
+                {difficulties.map((difficulty) => (
+                  <button
+                    key={difficulty}
+                    onClick={() => handleDifficultyClick(difficulty)}
+                    className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition ${
+                      selectedDifficulty === difficulty
+                        ? 'bg-orange-500 text-white shadow-sm'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {difficulty}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <button
+              type="button"
+              className="inline-flex items-center rounded-xl bg-linear-to-r from-[#AD46FF] to-[#F6339B] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-95"
+            >
+              <img
+                src="/icons/white/lucide_stars.svg"
+                alt=""
+                aria-hidden="true"
+                className="mr-2 h-4 w-4"
+              />
+              AI Recipe Generator
+            </button>
+          </div>
+
+          {(searchInput || selectedCategory || selectedDifficulty) && (
+            <div className="mb-6">
+              <button
+                onClick={clearAllFilters}
+                className="text-sm text-orange-600 hover:text-orange-700 font-medium underline"
+              >
+                Clear all filters
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       {loading && (
@@ -130,14 +249,14 @@ export default function Home() {
               No recipes found
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-gray-600">
-              No recipes match your search "{searchInput}". Try a different
-              search term.
+              No recipes match your current filters. Try adjusting your search
+              or filters.
             </p>
             <button
-              onClick={() => setSearchInput('')}
+              onClick={clearAllFilters}
               className="mt-6 inline-flex items-center rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600"
             >
-              Clear Search
+              Clear All Filters
             </button>
           </div>
         )}
