@@ -1,11 +1,11 @@
-import { useNormalizedVariants } from '../../hooks/useNormalizedVariants';
+import { normalizedVariants } from '../../lib/helpers/normalizedVariants';
 import type { Recipe } from '../../services/models/index';
 import { Badge } from '../badge/Badge';
 
 export default function RecipeCard({ recipe }: { recipe: Recipe }) {
   const totalTime = recipe.prepTime + recipe.cookTime;
   const { categoryKey, categoryClass, difficultyKey, difficultyVariant } =
-    useNormalizedVariants(recipe);
+    normalizedVariants(recipe);
 
   return (
     <div className="flex flex-wrap gap-2 max-w-96 justify-center rounded-lg shadow-md overflow-hidden hover:scale-102 transition duration-(--duration)">
