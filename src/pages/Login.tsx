@@ -92,7 +92,7 @@ export default function Login() {
   return (
     <main className="container mx-auto px-4 py-6 sm:p-6">
       <img
-        src="/loginpage.svg"
+        src="/icons/orange/loginpage.svg"
         className="mx-auto w-12 h-12 sm:w-14 sm:h-14 mb-4"
       />
       <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2">

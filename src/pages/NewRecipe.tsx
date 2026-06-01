@@ -11,7 +11,11 @@ export default function NewRecipe() {
         to="/my-recipes"
         className="flex gap-2 w-fit mt-8 items-center hover:underline"
       >
-        <img src="/back-arrow-icon.svg" alt="Go back" className="w-4" />
+        <img
+          src="/icons/black/lucide_arrow-left.svg"
+          alt="Go back"
+          className="w-4"
+        />
         Back to recipes
       </Link>
 

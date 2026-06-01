@@ -13,7 +13,7 @@ export default function LoginButton() {
       className="inline-flex items-center gap-2 px-3! py-2! text-sm font-semibold transition-colors bg-gray-100! text-black cursor-pointer"
     >
       <img
-        src="/lucide_log-out.svg"
+        src="/icons/black/lucide_log-out.svg"
         alt=""
         aria-hidden="true"
         className="w-3.5 h-3.5"
@@ -22,18 +22,27 @@ export default function LoginButton() {
       <span>Log Out</span>
     </Button>
   ) : (
-    <Link
-      to="/login"
-      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors bg-orange-500 text-white cursor-pointer"
-    >
-      <img
-        src="/login-btn-icon.svg"
-        alt=""
-        aria-hidden="true"
-        className="w-3.5 h-3.5"
-      />
+    <div className="flex items-center gap-2">
+      <Link
+        to="/login"
+        className="inline-flex items-center gap-2 rounded-md bg-orange-500 px-3 py-1.5 text-sm text-white transition-colors cursor-pointer"
+      >
+        <img
+          src="/icons/white/lucide_log-in.svg"
+          alt=""
+          aria-hidden="true"
+          className="w-3.5 h-3.5"
+        />
 
-      <span>Log In</span>
-    </Link>
+        <span>Log In</span>
+      </Link>
+
+      <Link
+        to="/register"
+        className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm text-[#4A5565] transition-colors hover:bg-gray-50 cursor-pointer"
+      >
+        <span>Register</span>
+      </Link>
+    </div>
   );
 }
