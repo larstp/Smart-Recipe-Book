@@ -1,19 +1,16 @@
 type InputProps = {
-  id: string;
-  type: string;
-  name: string;
   label?: string;
   classes?: string;
   error?: string;
-};
+} & React.InputHTMLAttributes<HTMLInputElement>;
 
 export const Input = ({
   id,
-  type,
   name,
   label,
   classes,
   error,
+  ...props
 }: InputProps) => {
   return (
     <div className="grid gap-2">
@@ -23,9 +20,12 @@ export const Input = ({
       <input
         id={id}
         name={name}
-        type={type}
-        placeholder={name}
+        type={props.type ?? 'text'}
+        placeholder={
+          props.placeholder ?? (typeof name === 'string' ? name : '')
+        }
         className={`bg-gray-100 rounded-lg p-1 ${classes}`}
+        {...props}
       />
       {error && <p className="text-red-500">{error}</p>}
     </div>
