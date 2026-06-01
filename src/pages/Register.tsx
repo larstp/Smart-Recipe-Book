@@ -156,7 +156,7 @@ export default function Register() {
   return (
     <main className="container mx-auto px-4 py-6 sm:p-6">
       <img
-        src="/register-icon.svg"
+        src="/icons/orange/register-icon.svg"
         className="mx-auto w-12 h-12 sm:w-14 sm:h-14 mb-4"
       />
 
