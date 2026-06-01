@@ -1,9 +1,9 @@
 import { withApiHandler } from './withApiHandler';
 import { PANTRY_URL } from '../config';
-import type { Pantry, PantryItem } from '../models';
-import type { RecipePayload } from './types';
+import type { PantryItem } from '../models';
+import type { PantryPayload } from './types';
 
-export const getFullPantry = withApiHandler<Pantry>({
+export const getFullPantry = withApiHandler<PantryItem[]>({
   endpoint: PANTRY_URL,
   init: () => ({
     headers: {
@@ -14,7 +14,7 @@ export const getFullPantry = withApiHandler<Pantry>({
   }),
 });
 
-export const postNewPantryItem = withApiHandler<PantryItem, [RecipePayload]>({
+export const postNewPantryItem = withApiHandler<PantryItem, [PantryPayload]>({
   endpoint: PANTRY_URL,
   init: (payload) => ({
     method: 'POST',
@@ -29,10 +29,10 @@ export const postNewPantryItem = withApiHandler<PantryItem, [RecipePayload]>({
 
 export const updatePantryItem = withApiHandler<
   PantryItem,
-  [string, RecipePayload]
+  [string, PantryPayload]
 >({
   endpoint: (id: string) => `${PANTRY_URL}/${id}`,
-  init: (id: string, payload: RecipePayload) => ({
+  init: (id: string, payload: PantryPayload) => ({
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
