@@ -2,17 +2,16 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { LoginFormData, LoginFormError } from '../types/loginForm';
 import { useAuth } from '../context/useAuth';
-import { createApiKey } from '../api/auth';
+import { createApiKey, loginUser } from '../services/api/auth';
 import { STORAGE_KEYS } from '../constants/storage';
+import { Button } from '../components/Button';
 
 export default function Login() {
-  // Form state
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: '',
   });
 
-  // Error state
   const [errors, setErrors] = useState<LoginFormError>({});
 
   const navigate = useNavigate();
@@ -21,7 +20,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
 
-  // handle input changes
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
 
@@ -31,16 +29,13 @@ export default function Login() {
     }));
   }
 
-  // Validation logic
   function validate(): LoginFormError {
     const newErrors: LoginFormError = {};
 
-    // email validation
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
 
-    // password validation
     if (formData.password.trim().length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
     }
@@ -48,17 +43,14 @@ export default function Login() {
     return newErrors;
   }
 
-  // submit handler
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const validationErrors = validate();
 
     setErrors(validationErrors);
 
-    // if no errors
     if (Object.keys(validationErrors).length > 0) {
-      // show errors
       setErrors(validationErrors);
 
       return;
@@ -68,25 +60,7 @@ export default function Login() {
       setLoading(true);
       setApiError('');
 
-      const response = await fetch('https://v2.api.noroff.dev/auth/login', {
-        method: 'POST',
-
-        headers: {
-          'Content-Type': 'application/json',
-        },
-
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
-
-      const data = await response.json();
-
-      // API validation error
-      if (!response.ok) {
-        throw new Error(data.error?.message || 'invalid credentils');
-      }
+      const data = await loginUser(formData.email, formData.password);
 
       const accessToken = data.data.accessToken;
 
@@ -95,16 +69,16 @@ export default function Login() {
         email: data.data.email,
       };
 
-      // login user
       login(accessToken, user);
 
-      // create API key
-      const apiKeyResponse = await createApiKey(accessToken);
+      const storedApiKey = localStorage.getItem(STORAGE_KEYS.API_KEY);
 
-      // save api key
-      localStorage.setItem(STORAGE_KEYS.API_KEY, apiKeyResponse.data.key);
+      if (!storedApiKey) {
+        const apiKeyResponse = await createApiKey(accessToken);
 
-      // redirect home
+        localStorage.setItem(STORAGE_KEYS.API_KEY, apiKeyResponse.data.key);
+      }
+
       navigate('/');
     } catch (error) {
       if (error instanceof Error) {
@@ -130,7 +104,6 @@ export default function Login() {
         className="w-full mx-auto max-w-md bg-white rounded-lg shadow-md p-4 sm:p-6 mt-6 sm:mt-8"
         onSubmit={handleSubmit}
       >
-        {/* email */}
         <label className="text-sm font-semibold">Email</label>
         <div>
           <input
@@ -146,7 +119,6 @@ export default function Login() {
           )}
         </div>
 
-        {/* password */}
         <label className="text-sm font-semibold">Password</label>
         <div>
           <input
@@ -160,17 +132,15 @@ export default function Login() {
           {errors.password && <p className="">&#11205;{errors.password}</p>}
         </div>
 
-        {/* api error */}
         {apiError && <p className="text-red-500 text-sm-mb-4">{apiError}</p>}
 
-        {/* button */}
-        <button
-          className="w-full bg-orange-500 text-white py-3 sm:py-2 rounded-lg text-sm font-semibold mb-5 disabled:opacity-50"
+        <Button
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white sm:py-2 text-sm font-semibold mb-5 disabled:opacity-50"
           type="submit"
           disabled={loading}
         >
           {loading ? 'Logging in..' : 'Log In'}
-        </button>
+        </Button>
 
         <p className="text-center text-gray-500 text-sm">
           Don't have an account?{' '}

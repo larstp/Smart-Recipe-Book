@@ -1,6 +1,6 @@
+import { NavLink, Outlet, Link } from 'react-router-dom';
+import LoginButton from './LoginOutButton';
 import { useState } from 'react';
-import { Link, NavLink, Outlet } from 'react-router-dom';
-import LoginButton from './LoginButton';
 import { useAuth } from '../context/useAuth';
 import { Toaster } from 'react-hot-toast';
 

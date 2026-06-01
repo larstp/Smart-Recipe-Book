@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
+import { Button } from './Button';
+
+// This button function does both, Login and Logout.
 
 export default function LoginButton() {
   const { user, logout } = useAuth();
   return user ? (
-    <button
+    <Button
       onClick={logout}
-      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors bg-gray-100 text-black cursor-pointer"
+      variant="secondary"
+      className="inline-flex items-center gap-2 px-3! py-2! text-sm font-semibold transition-colors bg-gray-100! text-black cursor-pointer"
     >
       <img
         src="/icons/black/lucide_log-out.svg"
@@ -16,7 +20,7 @@ export default function LoginButton() {
       />
 
       <span>Log Out</span>
-    </button>
+    </Button>
   ) : (
     <div className="flex items-center gap-2">
       <Link
