@@ -31,13 +31,15 @@ export const normalizedVariants = (
     return { categoryKey, categoryClass, difficultyKey, difficultyVariant };
   }
 
-  const rawPantryItem = pantryItem?.category.trim() ?? '';
+  const rawPantryItem = (pantryItem?.category ?? '').trim().toLowerCase();
+
+  const categoryClass =
+    PANTRY_CATEGORY_STYLES[rawPantryItem as PantryItem['category']] ??
+    'bg-gray-100 text-gray-700';
+
   const categoryKey = rawPantryItem
     ? rawPantryItem.charAt(0).toUpperCase() + rawPantryItem.slice(1)
     : '';
-  const categoryClass =
-    (PANTRY_CATEGORY_STYLES as Record<string, string>)[categoryKey] ??
-    'bg-gray-100 text-gray-700';
 
   const difficultyKey = '';
   const difficultyVariant = 'default' as const;
