@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useNormalizedVariants } from '../../hooks/useNormalizedVariants';
+import { normalizedVariants } from '../../lib/helpers/normalizedVariants';
 import { ApiError } from '../../services/apiError';
 import NotFound from '../../lib/NotFound';
 import { Badge } from '.././../components/badge/Badge';
@@ -19,7 +19,7 @@ export default function RecipeDetails() {
   } = useRecipeDetails(paramId);
 
   const { categoryKey, categoryClass, difficultyKey, difficultyVariant } =
-    useNormalizedVariants(recipe);
+    normalizedVariants(recipe);
 
   if (!paramId) {
     return (
