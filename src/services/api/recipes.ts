@@ -1,4 +1,5 @@
 import { withApiHandler } from './withApiHandler';
+import { getAuthHeaders } from './getAuthHeaders';
 import { RECIPE_URL } from '../config';
 import type { Recipe } from '../models';
 import type { RecipePayload } from './types';
@@ -15,11 +16,7 @@ export const postNewRecipe = withApiHandler<Recipe, [RecipePayload]>({
   endpoint: RECIPE_URL,
   init: (payload) => ({
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Noroff-API-Key': import.meta.env.VITE_NOROFF_API_KEY,
-      Authorization: `Bearer ${import.meta.env.VITE_TEST_USER_AUTH}`,
-    },
+    headers: getAuthHeaders(),
     body: JSON.stringify(payload),
   }),
 });
