@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
-// import { getFullPantry } from '../services/api/pantry';
-import { pantryMock } from '../services/mockData/pantryItemsMock';
+import { getFullPantry } from '../services/api/pantry';
+// import { pantryMock } from '../services/mockData/pantryItemsMock';
 import { normalizedVariants } from '../lib/helpers/normalizedVariants';
 import { Button } from '../components/Button';
 import { Badge } from '../components/badge/Badge';
@@ -22,10 +22,10 @@ export default function Pantry() {
       setError(null);
 
       try {
-        // const items = await getFullPantry();
+        const items = await getFullPantry();
 
         // For testing UI as user w/ pantry items
-        const items = pantryMock;
+        // const items = pantryMock;
 
         // type error here is expected when using mock data, not an issue in production
         setPantry(items);
