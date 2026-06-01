@@ -92,7 +92,7 @@ export default function Layout() {
         }}
       />
 
-      <header className="relative z-100 bg-white border-b border-gray-200">
+      <header className="sticky top-0 z-100 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex h-16 items-center justify-between lg:hidden">
             <Link
