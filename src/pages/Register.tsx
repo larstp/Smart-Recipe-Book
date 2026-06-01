@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
-import { createApiKey } from '../api/auth';
+import { createApiKey } from '../services/api/auth';
 import { STORAGE_KEYS } from '../constants/storage';
 
 type RegisterFormData = {
@@ -29,14 +29,12 @@ export default function Register() {
     confirmPassword: '',
   });
 
-  // errors
   const [errors, setErrors] = useState<RegisterFromError>({});
 
   const [apiError, setApiError] = useState('');
 
   const [loading, setLoading] = useState(false);
 
-  //
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
 
@@ -46,26 +44,21 @@ export default function Register() {
     }));
   }
 
-  // validation
   function validate(): RegisterFromError {
     const newErrors: RegisterFromError = {};
 
-    // display name
     if (formData.name.trim().length < 2) {
       newErrors.name = 'Username must be at least 2 characters';
     }
 
-    // email
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enater a valid email address';
     }
 
-    // password
     if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
     }
 
-    // password confirm
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Password do not match';
     }
@@ -73,7 +66,6 @@ export default function Register() {
     return newErrors;
   }
 
-  // submit
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -81,7 +73,6 @@ export default function Register() {
 
     setErrors(validationErrors);
 
-    // stop if errors
     if (Object.keys(validationErrors).length > 0) {
       return;
     }
@@ -90,7 +81,6 @@ export default function Register() {
       setLoading(true);
       setApiError('');
 
-      // registration request
       const response = await fetch('https://v2.api.noroff.dev/auth/register', {
         method: 'POST',
         headers: {
@@ -105,12 +95,10 @@ export default function Register() {
 
       const data = await response.json();
 
-      // api errors
       if (!response.ok) {
         throw new Error(data.errors?.[0]?.message || 'Failed to register');
       }
 
-      // auto login after register
       const loginResponse = await fetch(
         'https://v2.api.noroff.dev/auth/login',
         {
@@ -134,15 +122,12 @@ export default function Register() {
         email: loginData.data.email,
       };
 
-      // login user
       login(accessToken, user);
 
-      // create api key
       const apiKeyResponse = await createApiKey(accessToken);
 
       localStorage.setItem(STORAGE_KEYS.API_KEY, apiKeyResponse.data.key);
 
-      // redirect home
       navigate('/');
     } catch (error) {
       if (error instanceof Error) {
@@ -170,7 +155,6 @@ export default function Register() {
         className="w-full mx-auto max-w-md bg-white rounded-lg shadow-md p-4 sm:p-6 mt-6 sm:mt-8"
         onSubmit={handleSubmit}
       >
-        {/* display name */}
         <label className="text-sm font-semibold">Display Name</label>
 
         <input
@@ -186,7 +170,6 @@ export default function Register() {
           <p className="text-red-500 text-sm mb-3">{errors.name}</p>
         )}
 
-        {/* email */}
         <label className="text-sm font-semibold">Email</label>
 
         <input
@@ -202,7 +185,6 @@ export default function Register() {
           <p className="text-red-500 text-sm mb-3">{errors.email}</p>
         )}
 
-        {/* password */}
         <label className="text-sm font-semibold">Password</label>
 
         <input
@@ -218,7 +200,6 @@ export default function Register() {
           <p className="text-red-500 text-sm mb-3">{errors.password}</p>
         )}
 
-        {/* confirm password */}
         <label className="text-sm font-semibold">Confirm Password</label>
 
         <input
@@ -234,7 +215,6 @@ export default function Register() {
           <p className="text-red-500 text-sm mb-3">{errors.confirmPassword}</p>
         )}
 
-        {/* api error */}
         {apiError && <p className="text-red-500 text-sm mb-4">{apiError}</p>}
 
         <button
