@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import FavoriteToggleButton from '../FavoriteToggleButton';
+import { useAuth } from '../../context/useAuth';
 import { normalizedVariants } from '../../lib/helpers/normalizedVariants';
 import type { Recipe } from '../../services/models/index';
 import { Badge } from '../badge/Badge';
@@ -11,9 +12,11 @@ export default function RecipeCard({
   recipe: Recipe;
   to?: string;
 }) {
+  const { user } = useAuth();
   const totalTime = recipe.prepTime + recipe.cookTime;
   const { categoryKey, categoryClass, difficultyKey, difficultyVariant } =
     normalizedVariants(recipe);
+  const isOwnRecipe = Boolean(user && recipe.owner?.email === user.email);
 
   return (
     <article className="group relative flex w-full max-w-96 flex-wrap justify-center gap-2 overflow-hidden rounded-lg bg-white shadow-md transition duration-(--duration) hover:scale-102">
@@ -24,10 +27,12 @@ export default function RecipeCard({
           className="absolute inset-0 z-10 rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/40"
         />
 
-        <FavoriteToggleButton
-          recipe={recipe}
-          className="absolute right-3 top-3 z-20"
-        />
+        {!isOwnRecipe && (
+          <FavoriteToggleButton
+            recipe={recipe}
+            className="absolute right-3 top-3 z-20"
+          />
+        )}
 
         <Badge
           text={categoryKey}

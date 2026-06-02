@@ -5,6 +5,7 @@ import type { Recipe } from '../services/models';
 
 type FavoriteToggleButtonProps = {
   recipe: Recipe;
+  shape?: 'circle' | 'square';
   className?: string;
 };
 
@@ -27,14 +28,19 @@ function HeartIcon({ active }: { active: boolean }) {
 
 export default function FavoriteToggleButton({
   recipe,
+  shape = 'circle',
   className = '',
 }: FavoriteToggleButtonProps) {
   const { user } = useAuth();
   const { isFavorite, isSyncing, toggleFavorite } = useFavorites();
 
+  if (!user) {
+    return null;
+  }
+
   const favorited = isFavorite(recipe.id);
   const syncing = isSyncing(recipe.id);
-  const disabled = !user || syncing;
+  const disabled = syncing;
 
   const handleClick = async () => {
     if (!user || syncing) {
@@ -47,7 +53,19 @@ export default function FavoriteToggleButton({
       toast.error(
         error instanceof Error
           ? error.message
-          : 'Could not update the favorite state.',
+          : 'Could not update your favorites. Please try again.',
+        {
+          icon: '!',
+          style: {
+            border: '1px solid #ffb37a',
+            background: '#fff7f2',
+            color: '#7a2b00',
+          },
+          iconTheme: {
+            primary: '#ff6900',
+            secondary: '#fff7f2',
+          },
+        },
       );
     }
   };
@@ -59,14 +77,16 @@ export default function FavoriteToggleButton({
       disabled={disabled}
       aria-pressed={favorited}
       aria-label={
-        user
-          ? favorited
-            ? `Remove ${recipe.title} from favorites`
-            : `Add ${recipe.title} to favorites`
-          : 'Log in to add favorites'
+        favorited
+          ? `Remove ${recipe.title} from favorites`
+          : `Add ${recipe.title} to favorites`
       }
-      className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white/95 text-gray-500 shadow-sm transition duration-200 hover:scale-105 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/40 disabled:cursor-not-allowed disabled:opacity-60 ${
-        favorited ? 'text-rose-500 hover:text-rose-600' : 'hover:text-rose-500'
+      className={`inline-flex h-10 w-10 items-center justify-center border border-gray-200 bg-white/95 text-gray-500 shadow-sm transition duration-200 hover:scale-105 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/40 disabled:cursor-not-allowed disabled:opacity-60 ${
+        shape === 'square' ? 'rounded-md' : 'rounded-full'
+      } ${
+        favorited
+          ? 'border-[#ff6900]/20 bg-[#ff6900]/10 text-[#ff6900] hover:text-[#ff6900]'
+          : 'hover:border-[#ff6900]/25 hover:text-[#ff6900]'
       } ${className}`}
     >
       <HeartIcon active={favorited} />

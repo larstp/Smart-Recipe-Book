@@ -18,11 +18,16 @@ export const normalizedVariants = (
 
   if (!recipe && !pantryItem) return defaultReturn;
 
+  const safeTrim = (value: unknown) => String(value ?? '').trim();
+
   if (recipe) {
-    const categoryKey = (recipe.category.trim().charAt(0).toUpperCase() +
-      recipe.category.trim().slice(1)) as Recipe['category'];
-    const difficultyKey = (recipe.difficulty.trim().charAt(0).toUpperCase() +
-      recipe.difficulty.trim().slice(1)) as Recipe['difficulty'];
+    const normalizedCategory = safeTrim(recipe.category);
+    const normalizedDifficulty = safeTrim(recipe.difficulty);
+
+    const categoryKey = (normalizedCategory.charAt(0).toUpperCase() +
+      normalizedCategory.slice(1)) as Recipe['category'];
+    const difficultyKey = (normalizedDifficulty.charAt(0).toUpperCase() +
+      normalizedDifficulty.slice(1)) as Recipe['difficulty'];
 
     const categoryClass =
       RECIPE_CATEGORY_STYLES[categoryKey] ?? 'bg-gray-100 text-gray-700';

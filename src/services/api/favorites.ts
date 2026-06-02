@@ -5,6 +5,16 @@ import type { Recipe } from '../models';
 
 const FAVORITES_URL = '/favorites';
 
+type FavoriteRecipeResponse = Recipe | { recipe: Recipe };
+
+function normalizeFavoriteRecipe(item: FavoriteRecipeResponse): Recipe {
+  if ('recipe' in item && item.recipe) {
+    return item.recipe;
+  }
+
+  return item as Recipe;
+}
+
 async function requestFavorites<TResult>(
   path: string,
   init?: RequestInit,
@@ -46,9 +56,9 @@ async function requestFavorites<TResult>(
 }
 
 export function getFavorites() {
-  return requestFavorites<Recipe[]>(FAVORITES_URL, {
+  return requestFavorites<FavoriteRecipeResponse[]>(FAVORITES_URL, {
     method: 'GET',
-  });
+  }).then((favorites) => favorites.map(normalizeFavoriteRecipe));
 }
 
 export function addFavorite(recipeId: string) {
