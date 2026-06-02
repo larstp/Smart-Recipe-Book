@@ -5,7 +5,11 @@ export interface Comment {
   id: number;
   text: string;
   recipeId: Recipe['id'];
-  author: Profile;
-  created: Date;
-  updated: Date;
+  profile: Profile;
+  author: {
+    id: number;
+    displayName: string;
+  };
+  createdAt: string;
+  updatedAt: string;
 }
