@@ -7,7 +7,7 @@ type SelectProps = {
   classes?: string;
   options: string[];
   error?: string;
-};
+} & React.SelectHTMLAttributes<HTMLSelectElement>;
 
 export const Select = ({
   id,
@@ -16,6 +16,7 @@ export const Select = ({
   classes,
   options,
   error,
+  ...props
 }: SelectProps) => {
   const [value, setValue] = useState('');
 
@@ -30,6 +31,7 @@ export const Select = ({
         className={`bg-gray-100 rounded-lg p-1.5 ${classes}`}
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        {...props}
       >
         <option value="">Select...</option>
         {options.map((option, index) => (
