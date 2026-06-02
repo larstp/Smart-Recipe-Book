@@ -1,44 +1,33 @@
 import { withApiHandler } from './withApiHandler';
+import { getAuthHeaders } from './getAuthHeaders';
 import { PANTRY_URL } from '../config';
-import type { Pantry, PantryItem } from '../models';
-import type { RecipePayload } from './types';
+import type { PantryItem } from '../models';
+import type { PantryPayload } from './types';
 
-export const getFullPantry = withApiHandler<Pantry>({
+export const getFullPantry = withApiHandler<PantryItem[]>({
   endpoint: PANTRY_URL,
   init: () => ({
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Noroff-API-Key': import.meta.env.VITE_NOROFF_API_KEY,
-      Authorization: `Bearer ${import.meta.env.VITE_TEST_USER_AUTH}`,
-    },
+    headers: getAuthHeaders(),
   }),
 });
 
-export const postNewPantryItem = withApiHandler<PantryItem, [RecipePayload]>({
+export const postNewPantryItem = withApiHandler<PantryItem, [PantryPayload]>({
   endpoint: PANTRY_URL,
   init: (payload) => ({
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Noroff-API-Key': import.meta.env.VITE_NOROFF_API_KEY,
-      Authorization: `Bearer ${import.meta.env.VITE_TEST_USER_AUTH}`,
-    },
+    headers: getAuthHeaders(),
     body: JSON.stringify(payload),
   }),
 });
 
 export const updatePantryItem = withApiHandler<
   PantryItem,
-  [string, RecipePayload]
+  [string, PantryPayload]
 >({
   endpoint: (id: string) => `${PANTRY_URL}/${id}`,
-  init: (id: string, payload: RecipePayload) => ({
+  init: (id: string, payload: PantryPayload) => ({
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Noroff-API-Key': import.meta.env.VITE_NOROFF_API_KEY,
-      Authorization: `Bearer ${import.meta.env.VITE_TEST_USER_AUTH}`,
-    },
+    headers: getAuthHeaders(),
     body: JSON.stringify({ id, ...payload }),
   }),
 });
@@ -47,10 +36,6 @@ export const deletePantryItem = withApiHandler<void, [string]>({
   endpoint: (id: string) => `${PANTRY_URL}/${id}`,
   init: () => ({
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Noroff-API-Key': import.meta.env.VITE_NOROFF_API_KEY,
-      Authorization: `Bearer ${import.meta.env.VITE_TEST_USER_AUTH}`,
-    },
+    headers: getAuthHeaders(),
   }),
 });

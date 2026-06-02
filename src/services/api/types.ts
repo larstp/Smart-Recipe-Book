@@ -20,3 +20,13 @@ export type RecipePayload = {
   instructions: string[];
   // owner: Profile;
 };
+
+export type PantryPayload = {
+  name: string;
+  quantity: number;
+  unit: string;
+  category: string;
+};
+
+export type PantryField = 'name' | 'quantity' | 'unit' | 'category';
+export type PantryErrors = Partial<Record<PantryField, string>>;
