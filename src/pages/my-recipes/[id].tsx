@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import FavoriteToggleButton from '../../components/FavoriteToggleButton';
 import { normalizedVariants } from '../../lib/helpers/normalizedVariants';
 import { ApiError } from '../../services/apiError';
 import NotFound from '../../lib/NotFound';
@@ -53,9 +54,10 @@ export default function RecipeDetails() {
           className="mb-4 max-w-150 h-auto rounded-lg object-cover justify-self-center"
         />
 
-        <h1 className="mb-4 text-2xl font-bold justify-self-center">
-          # {recipe.title}
-        </h1>
+        <div className="mb-4 flex items-center gap-3 justify-self-center">
+          <h1 className="text-2xl font-bold"># {recipe.title}</h1>
+          <FavoriteToggleButton recipe={recipe} />
+        </div>
 
         <div className="flex flex-wrap gap-4 justify-self-center">
           <Badge

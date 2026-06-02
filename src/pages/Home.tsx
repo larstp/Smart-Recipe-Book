@@ -293,13 +293,12 @@ export default function Home() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredRecipes.map((recipe) => (
-              <Link
+              <div
                 key={recipe.id}
-                to={`/my-recipes/${recipe.id}`}
                 className="flex w-full justify-center md:block"
               >
                 <RecipeCard recipe={recipe} />
-              </Link>
+              </div>
             ))}
           </div>
         </>

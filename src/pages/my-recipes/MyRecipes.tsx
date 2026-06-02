@@ -1,5 +1,5 @@
-import { Link } from 'react-router';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import { getAllRecipes } from '../../services/api/recipes';
 import type { Recipe } from '../../services/models';
@@ -96,9 +96,7 @@ export default function MyRecipes() {
       {!loading && !error && recipes.length > 0 && (
         <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {recipes.map((recipe) => (
-            <Link key={recipe.id} to={`/my-recipes/${recipe.id}`}>
-              <RecipeCard recipe={recipe} />
-            </Link>
+            <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
       )}

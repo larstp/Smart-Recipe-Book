@@ -1,15 +1,34 @@
+import { Link } from 'react-router-dom';
+import FavoriteToggleButton from '../FavoriteToggleButton';
 import { normalizedVariants } from '../../lib/helpers/normalizedVariants';
 import type { Recipe } from '../../services/models/index';
 import { Badge } from '../badge/Badge';
 
-export default function RecipeCard({ recipe }: { recipe: Recipe }) {
+export default function RecipeCard({
+  recipe,
+  to = `/my-recipes/${recipe.id}`,
+}: {
+  recipe: Recipe;
+  to?: string;
+}) {
   const totalTime = recipe.prepTime + recipe.cookTime;
   const { categoryKey, categoryClass, difficultyKey, difficultyVariant } =
     normalizedVariants(recipe);
 
   return (
-    <div className="flex flex-wrap gap-2 max-w-96 justify-center rounded-lg shadow-md overflow-hidden hover:scale-102 transition duration-(--duration)">
+    <article className="group relative flex w-full max-w-96 flex-wrap justify-center gap-2 overflow-hidden rounded-lg bg-white shadow-md transition duration-(--duration) hover:scale-102">
       <div className="relative w-full aspect-video">
+        <Link
+          to={to}
+          aria-label={`Open ${recipe.title}`}
+          className="absolute inset-0 z-10 rounded-t-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/40"
+        />
+
+        <FavoriteToggleButton
+          recipe={recipe}
+          className="absolute right-3 top-3 z-20"
+        />
+
         <Badge
           text={categoryKey}
           classes={`${categoryClass} absolute bottom-4 left-4 z-50`}
@@ -18,12 +37,12 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
           <img
             src={recipe.image.url}
             alt={recipe.image.alt}
-            className="w-full h-full object-cover justify-self-center rounded-t-lg"
+            className="h-full w-full justify-self-center rounded-t-lg object-cover"
           />
         )}
       </div>
 
-      <div className="flex flex-col w-full gap-2 p-4">
+      <div className="relative z-20 flex w-full flex-col gap-2 p-4">
         <h2 className="text-xl font-semibold truncate">{recipe.title}</h2>
         <p className="text-sm text-(--text-muted) truncate">
           {recipe.description}
@@ -50,6 +69,6 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
 
         <p className="text-xs text-(--text-muted)">by {recipe.owner.name}</p>
       </div>
-    </div>
+    </article>
   );
 }
