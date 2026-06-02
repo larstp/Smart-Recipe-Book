@@ -39,7 +39,7 @@ export default function RecipeDetails() {
       });
   }, [paramId]);
 
-  function getRelativeTime(date: Date) {
+  function getRelativeTime(date: string) {
     const now = new Date().getTime();
     const commentDate = new Date(date).getTime();
 
@@ -54,7 +54,7 @@ export default function RecipeDetails() {
     const hours = Math.floor(minutes / 60);
 
     if (hours < 24) {
-      return `${hours} hours${hours !== 1 ? 's' : ''} ago`;
+      return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
     }
 
     const days = Math.floor(hours / 24);
@@ -196,11 +196,11 @@ export default function RecipeDetails() {
           <div className="divide-y divide-gray-200">
             {comments.map((comment) => (
               <div key={comment.id} className="py-4">
-                <p className="font-semibold">{comment.author.name}</p>
+                <p className="font-semibold">{comment.author.displayName}</p>
                 <p className="mt-2 text-gray-700">{comment.text}</p>
 
                 <p className="mt-2 text-sm text-gray-500">
-                  {getRelativeTime(comment.created)}
+                  {getRelativeTime(comment.createdAt)}
                 </p>
               </div>
             ))}
