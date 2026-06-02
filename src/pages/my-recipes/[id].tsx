@@ -1,4 +1,5 @@
-import { useParams } from 'react-router-dom';
+import { useAuth } from '../../context/useAuth';
+import { Link, useParams } from 'react-router-dom';
 import { normalizedVariants } from '../../lib/helpers/normalizedVariants';
 import { ApiError } from '../../services/apiError';
 import NotFound from '../../lib/NotFound';
@@ -7,6 +8,7 @@ import { useRecipeDetails } from '../../hooks/useRecipeDetails';
 
 export default function RecipeDetails() {
   const { id: paramId } = useParams<{ id: string }>();
+  const { user } = useAuth();
 
   const {
     recipe,
@@ -44,6 +46,8 @@ export default function RecipeDetails() {
     );
   }
 
+  const isOwner = user?.email === recipe.owner?.email;
+
   return (
     <div className="container mx-auto p-6">
       <div className="grid gap-8 justify-center max-w-200 justify-self-center">
@@ -52,6 +56,29 @@ export default function RecipeDetails() {
           alt={recipe?.image?.alt}
           className="mb-4 max-w-150 h-auto rounded-lg object-cover justify-self-center"
         />
+
+        <div className="mt-2 flex justify-end">
+          {isOwner && (
+            <Link
+              to={`/my-recipes/${recipe.id}/edit`}
+              aria-label={`Edit ${recipe.title} recipe`}
+              className="flex h-8 w-8 items-center justify-center rounded-lg border
+             border-[#FF6900] bg-orange-50 hover:border-2 transition-colors duration-200 "
+            >
+              <span
+                className="h-5 w-5"
+                style={{
+                  backgroundColor: '#FF6900',
+                  maskImage: "url('/icons/orange/lucide_pen.svg')",
+                  WebkitMaskImage: "url('/icons/orange/lucide_pen.svg')",
+                  maskSize: 'contain',
+                  maskPosition: 'center',
+                  maskRepeat: 'no-repeat',
+                }}
+              />
+            </Link>
+          )}
+        </div>
 
         <h1 className="mb-4 text-2xl font-bold justify-self-center">
           # {recipe.title}

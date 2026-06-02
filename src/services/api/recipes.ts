@@ -20,3 +20,12 @@ export const postNewRecipe = withApiHandler<Recipe, [RecipePayload]>({
     body: JSON.stringify(payload),
   }),
 });
+
+export const updateRecipe = withApiHandler<Recipe, [string, RecipePayload]>({
+  endpoint: (id: string) => `${RECIPE_URL}/${id}`,
+  init: (_id, payload) => ({
+    method: 'PUT',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(payload),
+  }),
+});
