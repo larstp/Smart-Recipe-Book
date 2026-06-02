@@ -1,14 +1,19 @@
 import { useAuth } from '../../context/useAuth';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 import { normalizedVariants } from '../../lib/helpers/normalizedVariants';
 import { ApiError } from '../../services/apiError';
 import NotFound from '../../lib/NotFound';
 import { Badge } from '.././../components/badge/Badge';
 import { useRecipeDetails } from '../../hooks/useRecipeDetails';
+import EditRecipeForm from '../../components/RecipeForm/EditRecipeForm';
+import { Button } from '../../components/Button';
+import { Modal } from '../../components/Modal';
 
 export default function RecipeDetails() {
   const { id: paramId } = useParams<{ id: string }>();
   const { user } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
 
   const {
     recipe,
@@ -59,24 +64,27 @@ export default function RecipeDetails() {
 
         <div className="mt-2 flex justify-end">
           {isOwner && (
-            <Link
-              to={`/my-recipes/${recipe.id}/edit`}
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setIsEditing(true)}
               aria-label={`Edit ${recipe.title} recipe`}
-              className="flex h-8 w-8 items-center justify-center rounded-lg border
-             border-[#FF6900] bg-orange-50 hover:border-2 transition-colors duration-200 "
+              className="flex h-8 w-8 items-center justify-center rounded-lg border "
             >
               <span
-                className="h-5 w-5"
+                className="inline-block h-5 w-5 bg-black"
                 style={{
-                  backgroundColor: '#FF6900',
-                  maskImage: "url('/icons/orange/lucide_pen.svg')",
-                  WebkitMaskImage: "url('/icons/orange/lucide_pen.svg')",
+                  maskImage: `url('/icons/black/lucide_pen.svg')`,
+                  WebkitMaskImage: `url('/icons/black/lucide_pen.svg')`,
+                  WebkitMaskSize: 'contain',
+                  WebkitMaskPosition: 'center',
+                  WebkitMaskRepeat: 'no-repeat',
                   maskSize: 'contain',
                   maskPosition: 'center',
                   maskRepeat: 'no-repeat',
                 }}
               />
-            </Link>
+            </Button>
           )}
         </div>
 
@@ -167,6 +175,13 @@ export default function RecipeDetails() {
           </div>
         )}
       </div>
+      <Modal
+        isOpen={isEditing}
+        onClose={() => setIsEditing(false)}
+        title={`Edit Recipe: ${recipe.title}`}
+      >
+        <EditRecipeForm recipe={recipe} />
+      </Modal>
     </div>
   );
 }
