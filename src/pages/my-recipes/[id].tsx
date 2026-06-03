@@ -69,20 +69,13 @@ export default function RecipeDetails() {
               variant="secondary"
               onClick={() => setIsEditing(true)}
               aria-label={`Edit ${recipe.title} recipe`}
-              className="flex h-8 w-8 items-center justify-center rounded-lg border "
+              className="flex h-8 w-8 items-center justify-center rounded-lg border p-0! cursor-pointer"
             >
-              <span
-                className="inline-block h-5 w-5 bg-black"
-                style={{
-                  maskImage: `url('/icons/black/lucide_pen.svg')`,
-                  WebkitMaskImage: `url('/icons/black/lucide_pen.svg')`,
-                  WebkitMaskSize: 'contain',
-                  WebkitMaskPosition: 'center',
-                  WebkitMaskRepeat: 'no-repeat',
-                  maskSize: 'contain',
-                  maskPosition: 'center',
-                  maskRepeat: 'no-repeat',
-                }}
+              <img
+                src="/icons/black/lucide_pen.svg"
+                alt="Edit"
+                aria-hidden="true"
+                className="h-5 w-5"
               />
             </Button>
           )}
@@ -179,6 +172,7 @@ export default function RecipeDetails() {
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
         title={`Edit Recipe: ${recipe.title}`}
+        className="md:max-w-4xl"
       >
         <EditRecipeForm recipe={recipe} />
       </Modal>

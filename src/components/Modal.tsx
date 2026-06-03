@@ -7,6 +7,7 @@ type ModalProps = {
   action?: () => void;
   title: string;
   children: React.ReactNode;
+  className?: string;
 };
 
 export const Modal = ({
@@ -15,6 +16,7 @@ export const Modal = ({
   action,
   title,
   children,
+  className = '',
 }: ModalProps) => {
   useEffect(() => {
     if (!isOpen) return;
@@ -46,7 +48,7 @@ export const Modal = ({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="relative z-10 grid gap-4 w-full max-w-xl mx-auto p-8 rounded-2xl border border-gray-200 bg-white/90 shadow-sm"
+        className={`relative z-10 grid gap-4 w-full max-w-xl mx-auto p-8 rounded-2xl border border-gray-200 bg-white/90 shadow-sm ${className}`}
       >
         {isOpen && (
           <>
