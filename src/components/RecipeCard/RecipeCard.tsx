@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import FavoriteToggleButton from '../FavoriteToggleButton';
 import { useAuth } from '../../context/useAuth';
@@ -17,6 +18,14 @@ export default function RecipeCard({
   const { categoryKey, categoryClass, difficultyKey, difficultyVariant } =
     normalizedVariants(recipe);
   const isOwnRecipe = Boolean(user && recipe.owner?.email === user.email);
+  const fallbackImageSrc = '/NO_IMAGE.svg';
+  const [imageSrc, setImageSrc] = useState(
+    recipe.image?.url || fallbackImageSrc,
+  );
+
+  useEffect(() => {
+    setImageSrc(recipe.image?.url || fallbackImageSrc);
+  }, [recipe.image?.url]);
 
   return (
     <article className="group relative flex w-full max-w-96 flex-wrap justify-center gap-2 overflow-hidden rounded-lg bg-white shadow-md transition duration-(--duration) hover:scale-102">
@@ -38,13 +47,17 @@ export default function RecipeCard({
           text={categoryKey}
           classes={`${categoryClass} absolute bottom-4 left-4 z-50`}
         />
-        {recipe.image && (
-          <img
-            src={recipe.image.url}
-            alt={recipe.image.alt}
-            className="h-full w-full justify-self-center rounded-t-lg object-cover"
-          />
-        )}
+        <img
+          src={imageSrc}
+          alt={recipe.image?.alt || recipe.title}
+          onError={() => {
+            if (imageSrc === fallbackImageSrc) {
+              return;
+            }
+            setImageSrc(fallbackImageSrc);
+          }}
+          className="h-full w-full justify-self-center rounded-t-lg object-cover"
+        />
       </div>
 
       <div className="relative z-20 flex w-full flex-col gap-2 p-4">
