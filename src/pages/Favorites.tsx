@@ -7,35 +7,58 @@ export default function Favorites() {
   const { user } = useAuth();
   const { favorites, isLoading, error } = useFavorites();
 
-  if (!user) {
-    return (
-      <main className="container mx-auto p-6">
-        <h1 className="text-2xl font-bold">Favorites</h1>
-        <p className="mt-2 text-gray-600">
-          Log in to save recipes and keep them here for later.
-        </p>
-        <Link
-          to="/login"
-          className="mt-4 inline-flex rounded-md bg-[#ff6900] px-4 py-2 font-medium text-white"
-        >
-          Log in
-        </Link>
-      </main>
-    );
-  }
-
   return (
-    <main className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold">Favorites</h1>
+    <div className="container mx-auto p-6">
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold">Favorite Recipes</h1>
+          <p className="mt-1 text-sm text-gray-600">
+            {favorites.length} recipes saved
+          </p>
+        </div>
+
+        {!user && (
+          <Link
+            to="/login"
+            className="rounded-md bg-[#ff6900] px-4 py-2 font-medium text-white"
+          >
+            Log in
+          </Link>
+        )}
+      </div>
 
       {isLoading && <p className="mt-2 text-gray-600">Loading favorites...</p>}
 
       {error && <p className="mt-2 text-red-600">Error: {error}</p>}
 
       {!isLoading && !error && favorites.length === 0 && (
-        <p className="mt-2 text-gray-600">
-          You have not saved any recipes yet.
-        </p>
+        <div className="flex min-h-72 flex-col items-center justify-center gap-4 rounded-lg border border-gray-200 bg-white shadow-2xs p-8 text-center">
+          <div className="mb-4 h-12 w-12 flex items-center justify-center">
+            <img
+              src="/icons/like-icon.svg"
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full"
+            />
+          </div>
+
+          <h2 className="text-xl font-semibold w-full">
+            {user ? 'No favorites yet' : 'You are not logged in'}
+          </h2>
+
+          <p className="text-gray-600 w-full">
+            {user
+              ? 'Start exploring recipes and save your favorites by clicking the heart icon!'
+              : 'Log in to save recipes and keep them here for later.'}
+          </p>
+
+          <Link
+            to={user ? '/' : '/login'}
+            className="mt-4 inline-block rounded bg-[#ff6900] px-4 py-2 text-white"
+          >
+            {user ? 'Browse Recipes' : 'Log in'}
+          </Link>
+        </div>
       )}
 
       {!isLoading && !error && favorites.length > 0 && (
@@ -45,6 +68,6 @@ export default function Favorites() {
           ))}
         </div>
       )}
-    </main>
+    </div>
   );
 }
