@@ -196,11 +196,11 @@ export default function RecipeDetails() {
           <div className="divide-y divide-gray-200">
             {comments.map((comment) => (
               <div key={comment.id} className="py-4">
-                <p className="font-semibold">{comment.author.displayName}</p>
+                <p className="font-semibold">By: {comment.author.name}</p>
                 <p className="mt-2 text-gray-700">{comment.text}</p>
 
                 <p className="mt-2 text-sm text-gray-500">
-                  {getRelativeTime(comment.createdAt)}
+                  {getRelativeTime(comment.created)}
                 </p>
               </div>
             ))}
