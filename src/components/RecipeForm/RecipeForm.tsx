@@ -84,7 +84,7 @@ export default function RecipeForm() {
         type="text"
         name="imageUrl"
         label="Image URL"
-        error={inputErrors.imageUrl || apiMessage('imageUrl')}
+        error={inputErrors.image || apiMessage('image')}
       />
 
       <Input
