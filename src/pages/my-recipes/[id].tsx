@@ -7,12 +7,19 @@ import { Badge } from '.././../components/badge/Badge';
 import { useRecipeDetails } from '../../hooks/useRecipeDetails';
 import { getRecipeComments } from '../../services/api/recipes';
 import type { Comment } from '../../services/models';
+import { createComment } from '../../services/api/comments';
 
 export default function RecipeDetails() {
   const { id: paramId } = useParams<{ id: string }>();
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentsLoading, setCommentsloading] = useState(true);
+
+  const [commentText, setCommentText] = useState('');
+  const [submittingComment, setSubmittingComment] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const isLoggedIn = !!user;
 
   const {
     recipe,
@@ -60,6 +67,30 @@ export default function RecipeDetails() {
     const days = Math.floor(hours / 24);
 
     return `${days} day${days !== 1 ? 's' : ''} ago`;
+  }
+
+  async function handleCommentSubmit(e: React.SubmitEvent) {
+    e.preventDefault();
+
+    if (!paramId || !commentText.trim()) {
+      return;
+    }
+
+    try {
+      setSubmittingComment(true);
+
+      const newComment = await createComment(paramId, {
+        text: commentText,
+      });
+
+      setComments((prev) => [newComment, ...prev]);
+
+      setCommentText('');
+    } catch (error) {
+      console.error('Failed to post comment', error);
+    } finally {
+      setSubmittingComment(false);
+    }
   }
 
   const { categoryKey, categoryClass, difficultyKey, difficultyVariant } =
@@ -182,6 +213,32 @@ export default function RecipeDetails() {
               <Badge key={tag} text={tag} variant="default" />
             ))}
           </div>
+        )}
+      </div>
+
+      <div className="mt-8">
+        {isLoggedIn ? (
+          <form onSubmit={handleCommentSubmit} className="space-y-4">
+            <h3 className="font-semibold">Leave a comment</h3>
+
+            <textarea
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              placeholder="Write your comment..."
+              rows={4}
+              className="w-full rounded-lg border border-gray-300 p-3"
+            ></textarea>
+
+            <button
+              type="submit"
+              disabled={submittingComment}
+              className="rounded-lg bg-orange-500 px-4 py-2 text-white hover:bg-orange-600 disabled:opacity-50"
+            >
+              {submittingComment ? 'posting...' : 'Post Comment'}
+            </button>
+          </form>
+        ) : (
+          <p className="text-gray-500">Log in to leave a comment.</p>
         )}
       </div>
 
