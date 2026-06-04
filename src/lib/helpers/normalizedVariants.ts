@@ -36,7 +36,7 @@ export const normalizedVariants = (
     return { categoryKey, categoryClass, difficultyKey, difficultyVariant };
   }
 
-  const rawPantryItem = (pantryItem?.category ?? '').trim().toLowerCase();
+  const rawPantryItem = safeTrim(pantryItem?.category).toLowerCase();
 
   const categoryClass =
     PANTRY_CATEGORY_STYLES[rawPantryItem as PantryItem['category']] ??

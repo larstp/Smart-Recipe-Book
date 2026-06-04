@@ -8,39 +8,8 @@ import {
   removeFavorite,
 } from '../services/api/favorites';
 import type { Recipe } from '../services/models';
-
-const FAVORITES_STORAGE_PREFIX = 'favorite-ids:';
-
-function getFavoritesStorageKey(email: string) {
-  return `${FAVORITES_STORAGE_PREFIX}${email}`;
-}
-
-function readCachedFavoriteIds(email: string) {
-  try {
-    const raw = localStorage.getItem(getFavoritesStorageKey(email));
-
-    if (!raw) {
-      return new Set<string>();
-    }
-
-    const parsed = JSON.parse(raw) as string[];
-
-    return new Set(parsed);
-  } catch {
-    return new Set<string>();
-  }
-}
-
-function writeCachedFavoriteIds(email: string, ids: Set<string>) {
-  try {
-    localStorage.setItem(
-      getFavoritesStorageKey(email),
-      JSON.stringify(Array.from(ids)),
-    );
-  } catch {
-    // Ignore storage failures; the server remains the source of truth.
-  }
-}
+import { readCachedFavoriteIds } from './favorites/readCachedFavoriteIds.ts';
+import { writeCachedFavoriteIds } from './favorites/writeCachedFavoriteIds.ts';
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();

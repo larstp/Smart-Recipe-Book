@@ -1,11 +1,10 @@
 import { ApiError } from '../apiError';
 import { BASE_URL } from '../config';
 import { getAuthHeaders } from './getAuthHeaders';
-import type { Recipe } from '../models';
+import { FAVORITES_URL } from './config';
+import type { Favorite, Recipe } from '../models';
 
-const FAVORITES_URL = '/favorites';
-
-type FavoriteRecipeResponse = Recipe | { recipe: Recipe };
+type FavoriteRecipeResponse = Recipe | Favorite | { recipe: Recipe };
 
 function normalizeFavoriteRecipe(item: FavoriteRecipeResponse): Recipe {
   if ('recipe' in item && item.recipe) {
@@ -19,6 +18,7 @@ async function requestFavorites<TResult>(
   path: string,
   init?: RequestInit,
 ): Promise<TResult> {
+  const method = init?.method?.toUpperCase() ?? 'GET';
   const response = await fetch(`${BASE_URL}${path}`, {
     ...init,
     headers: {
@@ -34,7 +34,10 @@ async function requestFavorites<TResult>(
   if (!response.ok) {
     const text = await response.text();
     throw new ApiError(
-      text || 'Failed to update favorites',
+      text ||
+        (method === 'GET'
+          ? 'Failed to load favorites'
+          : 'Failed to update favorites'),
       response.status,
       text,
     );

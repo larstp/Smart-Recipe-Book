@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
-import { FavoritesProvider } from './context/FavoritesContext';
+import { FavoritesProvider } from './context/FavoritesProvider';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
