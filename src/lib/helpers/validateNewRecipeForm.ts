@@ -20,7 +20,7 @@ export const validateNewRecipeForm = (form: HTMLFormElement): InputErrors => {
 
   if (!getValue('title')) errors.title = 'Title is required.';
   if (!getValue('description')) errors.description = 'Description is required.';
-  if (!getValue('image')) errors.image = 'Image URL is required.';
+  if (!getValue('imageUrl')) errors.image = 'Image URL is required.';
   if (!getValue('prepTime')) errors.prepTime = 'Prep time is required.';
   if (!getValue('cookTime')) errors.cookTime = 'Cook time is required.';
   if (!getValue('servings')) errors.servings = 'Servings is required.';

@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
-import { getFullPantry } from '../services/api/pantry';
+import { deletePantryItem, getFullPantry } from '../services/api/pantry';
 import { normalizedVariants } from '../lib/helpers/normalizedVariants';
 import { Button } from '../components/Button';
 import { Badge } from '../components/badge/Badge';
-import type { Pantry, PantryItem } from '../services/models';
-import { Modal } from '../components/Modal';
 import { PantryItemForm } from '../components/PantryItemForm';
+import { Modal } from '../components/Modal';
+import toast from 'react-hot-toast';
+import { errorMessage } from '../lib/errorMessage';
+import type { Pantry, PantryItem } from '../services/models';
 
 const panelClassName =
   'rounded-2xl border border-gray-200 bg-white/90 p-8 shadow-sm';
@@ -17,7 +19,11 @@ export default function Pantry() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [deleteTarget, setDeleteTarget] = useState<PantryItem['id'] | null>(
+    null,
+  );
 
+  const deleteTargetItem = pantry.find((item) => item.id === deleteTarget);
   const numberOfPantryItems = pantry.length;
 
   useEffect(() => {
@@ -77,6 +83,32 @@ export default function Pantry() {
     setModalOpen(false);
   };
 
+  const openConfirmDelete = (id: PantryItem['id']) => {
+    setDeleteTarget(id);
+  };
+
+  const closeConfirmDelete = () => {
+    setDeleteTarget(null);
+  };
+
+  const handleDeleteItem = async () => {
+    if (deleteTarget == null) return;
+
+    try {
+      await deletePantryItem(deleteTarget);
+      toast.success('Deleted pantry item');
+
+      setPantry((previous) =>
+        previous.filter((item) => item.id !== deleteTarget),
+      );
+    } catch (error) {
+      const apiError = errorMessage(error);
+      toast.error(`Could not delete pantry item. ${apiError}`);
+    } finally {
+      closeConfirmDelete();
+    }
+  };
+
   return (
     <>
       <Modal
@@ -85,6 +117,28 @@ export default function Pantry() {
         title="Add items to your pantry"
       >
         <PantryItemForm onSuccess={handlePantryItemAdded} />
+      </Modal>
+
+      <Modal
+        isOpen={deleteTarget !== null}
+        onClose={closeConfirmDelete}
+        title="Are you sure?"
+      >
+        <p>Deleting this item cannot be undone.</p>
+
+        <p>
+          Are you sure you want to delete{' '}
+          <strong>{deleteTargetItem?.name ?? 'this item'}</strong> ?
+        </p>
+
+        <div className="flex gap-2 mt-4">
+          <Button variant="secondary" onClick={closeConfirmDelete}>
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteItem} className="bg-red-600!">
+            Confirm delete
+          </Button>
+        </div>
       </Modal>
 
       <div className="container mx-auto p-6">
@@ -178,6 +232,7 @@ export default function Pantry() {
                             />
 
                             <img
+                              onClick={() => openConfirmDelete(item.id)}
                               src="/icons/orange/lucide_trash-2.svg"
                               alt="Trash icon"
                               className="w-4 h-4 hover:scale-105 cursor-pointer"

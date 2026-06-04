@@ -33,8 +33,20 @@ export function withApiHandler<TResult, TArgs extends unknown[] = []>({
         throw new ApiError(text, response.status, text);
       }
 
+      if (response.status === 204 || response.status === 205) {
+        return undefined as TResult;
+      }
+
+      const text = await response.text();
+      if (!text) {
+        return undefined as TResult;
+      }
+
+      // parse the JSON and type it
+      const json = JSON.parse(text) as TResult | ApiResponse<TResult>;
+
       // parse the response as JSON and type it
-      const json = (await response.json()) as TResult | ApiResponse<TResult>;
+      // const json = (await response.json()) as TResult | ApiResponse<TResult>;
 
       // return the data field if it exists, otherwise return the json as-is
       if (json && typeof json === 'object' && 'data' in json) {
