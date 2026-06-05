@@ -30,10 +30,16 @@ export const updateComment = withApiHandler<
 });
 
 export const deleteComment = withApiHandler<void, [string]>({
-  endpoint: (commentId) => `${COMMENT_URL}/${commentId}`,
+  endpoint: (commentId) => {
+    console.log('DELETE URL:', `${COMMENT_URL}/${commentId}`);
+    return `${COMMENT_URL}/${commentId}`;
+  },
 
   init: () => ({
     method: 'DELETE',
-    headers: getAuthHeaders(),
+    headers: {
+      ...getAuthHeaders(),
+      'Content-Type': 'application/json',
+    },
   }),
 });
