@@ -133,9 +133,19 @@ export default function RecipeDetails() {
     try {
       await deleteComment(commentId);
 
-      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+      setComments((prevComments) => {
+        const updatedComments = prevComments.filter(
+          (comment) => String(comment.id) !== String(commentId),
+        );
+
+        return updatedComments;
+      });
     } catch (error) {
-      console.error('Failed to delete comment', error);
+      console.error('Delete error:', error);
+
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
     }
   }
 
@@ -307,9 +317,10 @@ export default function RecipeDetails() {
                 <div className="flex justify-between items-center">
                   <p className="font-semibold">By: {comment.author.name}</p>
 
-                  {user?.name === comment.author.name && (
+                  {user?.email === comment.author.email && (
                     <div className="flex gap-2">
                       <button
+                        type="button"
                         onClick={() => {
                           setEditingCommentId(comment.id);
                           setEditedText(comment.text);
@@ -324,6 +335,7 @@ export default function RecipeDetails() {
                       </span>
 
                       <button
+                        type="button"
                         onClick={() => handleDeleteComment(comment.id)}
                         className="text-sm text-red-500 hover:underline"
                       >
@@ -344,6 +356,7 @@ export default function RecipeDetails() {
 
                     <div className="flex gap-2">
                       <button
+                        type="button"
                         onClick={() => handleUpdateComment(comment.id)}
                         className="rounded bg-green-500 px-3 py-1 text-white"
                       >
