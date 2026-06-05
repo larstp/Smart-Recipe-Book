@@ -319,6 +319,10 @@ export default function RecipeDetails() {
                         Edit
                       </button>
 
+                      <span className="text-black" aria-hidden="true">
+                        |
+                      </span>
+
                       <button
                         onClick={() => handleDeleteComment(comment.id)}
                         className="text-sm text-red-500 hover:underline"
