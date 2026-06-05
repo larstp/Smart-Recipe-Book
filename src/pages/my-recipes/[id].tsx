@@ -7,7 +7,11 @@ import { Badge } from '.././../components/badge/Badge';
 import { useRecipeDetails } from '../../hooks/useRecipeDetails';
 import { getRecipeComments } from '../../services/api/recipes';
 import type { Comment } from '../../services/models';
-import { createComment } from '../../services/api/comments';
+import {
+  createComment,
+  updateComment,
+  deleteComment,
+} from '../../services/api/comments';
 
 export default function RecipeDetails() {
   const { id: paramId } = useParams<{ id: string }>();
@@ -17,6 +21,9 @@ export default function RecipeDetails() {
 
   const [commentText, setCommentText] = useState('');
   const [submittingComment, setSubmittingComment] = useState(false);
+
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editedText, setEditedText] = useState('');
 
   const user = JSON.parse(localStorage.getItem('user') || 'null');
   const isLoggedIn = !!user;
@@ -90,6 +97,43 @@ export default function RecipeDetails() {
       console.error('Failed to post comment', error);
     } finally {
       setSubmittingComment(false);
+    }
+  }
+
+  async function handleUpdateComment(commentId: string) {
+    if (!editedText.trim()) return;
+
+    try {
+      const updatedComment = await updateComment(commentId, {
+        text: editedText,
+      });
+
+      setComments((prev) =>
+        prev.map((comment) =>
+          comment.id === commentId ? updatedComment : comment,
+        ),
+      );
+
+      setEditingCommentId(null);
+      setEditedText('');
+    } catch (error) {
+      console.error('Failed to update comment', error);
+    }
+  }
+
+  async function handleDeleteComment(commentId: string) {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this comment?',
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await deleteComment(commentId);
+
+      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+    } catch (error) {
+      console.error('Failed to delete comment', error);
     }
   }
 
@@ -253,8 +297,62 @@ export default function RecipeDetails() {
           <div className="divide-y divide-gray-200">
             {comments.map((comment) => (
               <div key={comment.id} className="py-4">
-                <p className="font-semibold">By: {comment.author.name}</p>
-                <p className="mt-2 text-gray-700">{comment.text}</p>
+                <div className="flex justify-between items-center">
+                  <p className="font-semibold">By: {comment.author.name}</p>
+
+                  {user?.name === comment.author.name && (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          setEditingCommentId(comment.id);
+                          setEditedText(comment.text);
+                        }}
+                        className="text-sm text-blue-500 hover:underline"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() => handleDeleteComment(comment.id)}
+                        className="text-sm text-red-500 hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {editingCommentId === comment.id ? (
+                  <div className="mt-3 space-y-2">
+                    <textarea
+                      value={editedText}
+                      onChange={(e) => setEditedText(e.target.value)}
+                      rows={3}
+                      className="w-full rounded-lg border border-gray-300 p-3"
+                    />
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleUpdateComment(comment.id)}
+                        className="rounded bg-green-500 px-3 py-1 text-white"
+                      >
+                        Save
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setEditingCommentId(null);
+                          setEditedText('');
+                        }}
+                        className="rounded bg-gray-300 px-3 py-1"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="mt-2 text-gray-700">{comment.text}</p>
+                )}
 
                 <p className="mt-2 text-sm text-gray-500">
                   {getRelativeTime(comment.created)}
