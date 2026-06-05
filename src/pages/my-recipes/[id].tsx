@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { normalizedVariants } from '../../lib/helpers/normalizedVariants';
+import { getRelativeTime } from '../../lib/helpers/getRelativeTime';
 import { ApiError } from '../../services/apiError';
 import NotFound from '../../lib/NotFound';
 import { Badge } from '.././../components/badge/Badge';
@@ -38,29 +39,6 @@ export default function RecipeDetails() {
         setCommentsloading(false);
       });
   }, [paramId]);
-
-  function getRelativeTime(date: string) {
-    const now = new Date().getTime();
-    const commentDate = new Date(date).getTime();
-
-    const diff = now - commentDate;
-
-    const minutes = Math.floor(diff / 1000 / 60);
-
-    if (minutes < 60) {
-      return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
-    }
-
-    const hours = Math.floor(minutes / 60);
-
-    if (hours < 24) {
-      return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
-    }
-
-    const days = Math.floor(hours / 24);
-
-    return `${days} day${days !== 1 ? 's' : ''} ago`;
-  }
 
   const { categoryKey, categoryClass, difficultyKey, difficultyVariant } =
     normalizedVariants(recipe);
