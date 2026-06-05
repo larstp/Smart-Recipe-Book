@@ -1,15 +1,22 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import FavoriteToggleButton from '../../components/FavoriteToggleButton';
 import { useAuth } from '../../context/useAuth';
 import { normalizedVariants } from '../../lib/helpers/normalizedVariants';
+import { getRelativeTime } from '../../lib/helpers/getRelativeTime';
 import { ApiError } from '../../services/apiError';
 import NotFound from '../../lib/NotFound';
 import { Badge } from '.././../components/badge/Badge';
 import { useRecipeDetails } from '../../hooks/useRecipeDetails';
+import { getRecipeComments } from '../../services/api/recipes';
+import type { Comment } from '../../services/models';
 
 export default function RecipeDetails() {
   const { user } = useAuth();
   const { id: paramId } = useParams<{ id: string }>();
+
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [commentsLoading, setCommentsloading] = useState(true);
 
   const {
     recipe,
@@ -20,6 +27,21 @@ export default function RecipeDetails() {
     isUpdated,
     error,
   } = useRecipeDetails(paramId);
+
+  useEffect(() => {
+    if (!paramId) return;
+
+    getRecipeComments(paramId)
+      .then((data) => {
+        setComments(data);
+      })
+      .catch(() => {
+        setComments([]);
+      })
+      .finally(() => {
+        setCommentsloading(false);
+      });
+  }, [paramId]);
 
   const { categoryKey, categoryClass, difficultyKey, difficultyVariant } =
     normalizedVariants(recipe);
@@ -144,6 +166,29 @@ export default function RecipeDetails() {
           <div className="flex flex-wrap gap-4 justify-self-center">
             {recipe.tags.map((tag) => (
               <Badge key={tag} text={tag} variant="default" />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-10">
+        <h2 className="text-xl font-bold mb-4">Comments ({comments.length})</h2>
+
+        {commentsLoading ? (
+          <p className="text-gray-500">loading comments...</p>
+        ) : comments.length === 0 ? (
+          <p className="text-gray-500">No comments yet.</p>
+        ) : (
+          <div className="divide-y divide-gray-200">
+            {comments.map((comment) => (
+              <div key={comment.id} className="py-4">
+                <p className="font-semibold">By: {comment.author.name}</p>
+                <p className="mt-2 text-gray-700">{comment.text}</p>
+
+                <p className="mt-2 text-sm text-gray-500">
+                  {getRelativeTime(comment.created)}
+                </p>
+              </div>
             ))}
           </div>
         )}
