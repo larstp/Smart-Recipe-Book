@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import FavoriteToggleButton from '../../components/FavoriteToggleButton';
+import { useAuth } from '../../context/useAuth';
 import { normalizedVariants } from '../../lib/helpers/normalizedVariants';
 import { ApiError } from '../../services/apiError';
 import NotFound from '../../lib/NotFound';
@@ -14,6 +16,9 @@ import {
 } from '../../services/api/comments';
 
 export default function RecipeDetails() {
+  const { user } = useAuth();
+  const isLoggedIn = !!user;
+
   const { id: paramId } = useParams<{ id: string }>();
 
   const [comments, setComments] = useState<Comment[]>([]);
@@ -24,9 +29,6 @@ export default function RecipeDetails() {
 
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editedText, setEditedText] = useState('');
-
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
-  const isLoggedIn = !!user;
 
   const {
     recipe,
@@ -163,6 +165,8 @@ export default function RecipeDetails() {
     );
   }
 
+  const isOwnRecipe = Boolean(user && recipe.owner?.email === user.email);
+
   return (
     <div className="container mx-auto p-6">
       <div className="grid gap-8 justify-center w-full max-w-200 justify-self-center">
@@ -172,9 +176,12 @@ export default function RecipeDetails() {
           className="mb-4 w-full max-w-150 h-auto rounded-lg object-cover justify-self-center"
         />
 
-        <h1 className="mb-4 text-2xl font-bold justify-self-center">
-          # {recipe.title}
-        </h1>
+        <div className="mb-4 flex items-center gap-3 justify-self-center">
+          <h1 className="text-2xl font-bold"># {recipe.title}</h1>
+          {!isOwnRecipe && (
+            <FavoriteToggleButton recipe={recipe} shape="square" />
+          )}
+        </div>
 
         <div className="flex flex-wrap gap-4 justify-self-center">
           <Badge

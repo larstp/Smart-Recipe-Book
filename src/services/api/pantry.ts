@@ -1,6 +1,6 @@
 import { withApiHandler } from './withApiHandler';
 import { getAuthHeaders } from './getAuthHeaders';
-import { PANTRY_URL } from '../config';
+import { PANTRY_URL } from './config';
 import type { PantryItem } from '../models';
 import type { PantryPayload } from './types';
 
