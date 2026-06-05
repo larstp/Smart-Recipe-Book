@@ -33,6 +33,11 @@ export function withApiHandler<TResult, TArgs extends unknown[] = []>({
         throw new ApiError(text, response.status, text);
       }
 
+      // Delete requests can return 204 No Content
+      if (response.status === 204) {
+        return undefined as TResult;
+      }
+
       // parse the response as JSON and type it
       const json = (await response.json()) as TResult | ApiResponse<TResult>;
 
