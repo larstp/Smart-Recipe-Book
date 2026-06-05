@@ -1,6 +1,6 @@
 import { withApiHandler } from './withApiHandler';
 import { getAuthHeaders } from './getAuthHeaders';
-import { RECIPE_URL } from '../config';
+import { RECIPE_URL } from './config';
 import type { Recipe } from '../models';
 import type { RecipePayload } from './types';
 
