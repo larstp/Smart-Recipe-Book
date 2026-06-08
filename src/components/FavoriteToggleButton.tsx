@@ -19,7 +19,9 @@ function HeartIcon({ active }: { active: boolean }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className="h-4 w-4"
+      className={`h-4 w-4 ${
+        active ? 'text-[#fb2c36] group-hover:text-[#ff6900]' : ''
+      }`}
     >
       <path d="M2 9.50004C2.00002 8.38724 2.33759 7.30062 2.96813 6.3837C3.59867 5.46678 4.49252 4.7627 5.53161 4.36444C6.5707 3.96618 7.70616 3.89248 8.78801 4.15308C9.86987 4.41368 10.8472 4.99632 11.591 5.82404C11.6434 5.88005 11.7067 5.92471 11.7771 5.95524C11.8474 5.98577 11.9233 6.00152 12 6.00152C12.0767 6.00152 12.1526 5.98577 12.2229 5.95524C12.2933 5.92471 12.3566 5.88005 12.409 5.82404C13.1504 4.99094 14.128 4.40341 15.2116 4.13964C16.2952 3.87588 17.4335 3.94839 18.4749 4.34752C19.5163 4.74666 20.4114 5.45349 21.0411 6.37394C21.6708 7.29439 22.0053 8.3848 22 9.50004C22 11.79 20.5 13.5 19 15L13.508 20.313C13.3217 20.527 13.0919 20.699 12.834 20.8173C12.5762 20.9357 12.296 20.9979 12.0123 20.9997C11.7285 21.0015 11.4476 20.9429 11.1883 20.8278C10.9289 20.7127 10.697 20.5437 10.508 20.332L5 15C3.5 13.5 2 11.8 2 9.50004Z" />
     </svg>
@@ -74,20 +76,20 @@ export default function FavoriteToggleButton({
     <button
       type="button"
       onClick={handleClick}
-      disabled={disabled}
       aria-pressed={favorited}
+      aria-disabled={disabled}
       aria-label={
         favorited
           ? `Remove ${recipe.title} from favorites`
           : `Add ${recipe.title} to favorites`
       }
-      className={`inline-flex h-10 w-10 items-center justify-center border border-gray-200 bg-white/95 text-gray-500 shadow-sm transition duration-200 hover:scale-105 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/40 disabled:cursor-not-allowed disabled:opacity-60 ${
+      className={`group inline-flex h-10 w-10 items-center justify-center border border-gray-200 bg-white/95 text-gray-500 shadow-sm transition duration-200 hover:scale-105 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/40 ${
         shape === 'square' ? 'rounded-md' : 'rounded-full'
       } ${
         favorited
-          ? 'border-[#ff6900]/20 bg-[#ff6900]/10 text-[#ff6900] hover:text-[#ff6900]'
+          ? 'border-[#ff6900]/20 bg-[#ff6900]/10'
           : 'hover:border-[#ff6900]/25 hover:text-[#ff6900]'
-      } ${className}`}
+      } ${syncing ? 'pointer-events-none opacity-60' : ''} ${className}`}
     >
       <HeartIcon active={favorited} />
     </button>
