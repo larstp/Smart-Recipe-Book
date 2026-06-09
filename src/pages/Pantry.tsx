@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
 import { deletePantryItem, getFullPantry } from '../services/api/pantry';
 import { normalizedVariants } from '../lib/helpers/normalizedVariants';
+import { errorMessage } from '../lib/errorMessage';
+import toast from 'react-hot-toast';
+import { Modal } from '../components/Modal';
 import { Button } from '../components/Button';
 import { Badge } from '../components/badge/Badge';
 import { PantryItemForm } from '../components/PantryItemForm';
-import { Modal } from '../components/Modal';
-import toast from 'react-hot-toast';
-import { errorMessage } from '../lib/errorMessage';
+import { EditPantryItemForm } from '../components/EditPantryItemForm';
 import type { Pantry, PantryItem } from '../services/models';
 
 const panelClassName =
@@ -18,12 +19,18 @@ export default function Pantry() {
   const [pantry, setPantry] = useState<PantryItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [deleteTarget, setDeleteTarget] = useState<PantryItem['id'] | null>(
+
+  const [activeItemId, setActiveItemId] = useState<PantryItem['id'] | null>(
     null,
   );
+  const [activeAction, setActiveAction] = useState<
+    'add' | 'edit' | 'delete' | null
+  >(null);
 
-  const deleteTargetItem = pantry.find((item) => item.id === deleteTarget);
+  const deleteTargetItem = pantry.find((item) => item.id === activeItemId);
+  const editTargetItem = pantry.find(
+    (item) => item.id === activeItemId,
+  ) as PantryItem;
   const numberOfPantryItems = pantry.length;
 
   useEffect(() => {
@@ -74,54 +81,57 @@ export default function Pantry() {
   const groupedItems = groupByCategory(pantry);
   const groups = Object.entries(groupedItems) as [string, PantryItem[]][];
 
-  const handleOpenModal = () => {
-    setModalOpen(true);
-  };
-
   const handlePantryItemAdded = (item: PantryItem) => {
     setPantry((previous) => [...previous, item]);
-    setModalOpen(false);
+    setActiveAction(null);
   };
 
-  const openConfirmDelete = (id: PantryItem['id']) => {
-    setDeleteTarget(id);
+  const openAction = (
+    action: 'add' | 'edit' | 'delete',
+    id?: PantryItem['id'],
+  ) => {
+    setActiveAction(action);
+    setActiveItemId(action === 'add' ? null : (id ?? null));
   };
 
-  const closeConfirmDelete = () => {
-    setDeleteTarget(null);
+  const closeAction = () => {
+    setActiveAction(null);
+    setActiveItemId(null);
   };
 
   const handleDeleteItem = async () => {
-    if (deleteTarget == null) return;
+    if (activeItemId == null) return;
 
     try {
-      await deletePantryItem(deleteTarget);
+      await deletePantryItem(activeItemId);
       toast.success('Deleted pantry item');
 
       setPantry((previous) =>
-        previous.filter((item) => item.id !== deleteTarget),
+        previous.filter((item) => item.id !== activeItemId),
       );
     } catch (error) {
       const apiError = errorMessage(error);
       toast.error(`Could not delete pantry item. ${apiError}`);
     } finally {
-      closeConfirmDelete();
+      closeAction();
     }
   };
 
   return (
     <>
+      {/* ADD PANTRY ITEM MODAL */}
       <Modal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+        isOpen={activeAction === 'add'}
+        onClose={() => closeAction()}
         title="Add items to your pantry"
       >
         <PantryItemForm onSuccess={handlePantryItemAdded} />
       </Modal>
 
+      {/* DELETE PANTRY ITEM MODAL */}
       <Modal
-        isOpen={deleteTarget !== null}
-        onClose={closeConfirmDelete}
+        isOpen={activeAction === 'delete'}
+        onClose={closeAction}
         title="Are you sure?"
       >
         <p>Deleting this item cannot be undone.</p>
@@ -132,13 +142,31 @@ export default function Pantry() {
         </p>
 
         <div className="flex gap-2 mt-4">
-          <Button variant="secondary" onClick={closeConfirmDelete}>
+          <Button variant="secondary" onClick={closeAction}>
             Cancel
           </Button>
           <Button onClick={handleDeleteItem} className="bg-red-600!">
             Confirm delete
           </Button>
         </div>
+      </Modal>
+
+      {/* EDIT PANTRY ITEM MODAL */}
+      <Modal
+        isOpen={activeAction === 'edit'}
+        onClose={closeAction}
+        title={`Editing ${editTargetItem?.name ?? 'pantry item'}`}
+      >
+        <EditPantryItemForm
+          onClose={closeAction}
+          item={editTargetItem}
+          onSuccess={(updatedItem) => {
+            setPantry((previous) =>
+              previous.map((p) => (p.id === updatedItem.id ? updatedItem : p)),
+            );
+            closeAction();
+          }}
+        />
       </Modal>
 
       <div className="container mx-auto p-6">
@@ -149,7 +177,7 @@ export default function Pantry() {
 
         <Button
           className="flex justify-self-end m-2 bg-(--brand)! hover:brightness-90 cursor-pointer"
-          onClick={handleOpenModal}
+          onClick={() => openAction('add')}
         >
           + Add Item
         </Button>
@@ -226,13 +254,14 @@ export default function Pantry() {
 
                           <div className="flex gap-2 items-center">
                             <img
+                              onClick={() => openAction('edit', item.id)}
                               src="/icons/black/lucide_pen.svg"
                               alt="Edit icon"
                               className="w-4 h-4 hover:scale-105 cursor-pointer"
                             />
 
                             <img
-                              onClick={() => openConfirmDelete(item.id)}
+                              onClick={() => openAction('delete', item.id)}
                               src="/icons/orange/lucide_trash-2.svg"
                               alt="Trash icon"
                               className="w-4 h-4 hover:scale-105 cursor-pointer"

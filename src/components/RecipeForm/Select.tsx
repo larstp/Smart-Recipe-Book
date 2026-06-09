@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 type SelectProps = {
   id: string;
   name: string;
@@ -18,8 +16,6 @@ export const Select = ({
   error,
   ...props
 }: SelectProps) => {
-  const [value, setValue] = useState('');
-
   return (
     <div className="grid gap-2">
       <label htmlFor={id} className="font-semibold text-sm">
@@ -29,8 +25,6 @@ export const Select = ({
         id={id}
         name={name}
         className={`bg-gray-100 rounded-lg p-1.5 ${classes}`}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
         {...props}
       >
         <option value="">Select...</option>
