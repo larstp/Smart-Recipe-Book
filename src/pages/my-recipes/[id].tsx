@@ -7,6 +7,7 @@ import { getRelativeTime } from '../../lib/helpers/getRelativeTime';
 import { ApiError } from '../../services/apiError';
 import NotFound from '../../lib/NotFound';
 import { Badge } from '.././../components/badge/Badge';
+import RecipeImage from '../../components/RecipeImage';
 import { useRecipeDetails } from '../../hooks/useRecipeDetails';
 import { getRecipeComments } from '../../services/api/recipes';
 import type { Comment } from '../../services/models';
@@ -74,10 +75,14 @@ export default function RecipeDetails() {
   return (
     <div className="container mx-auto p-6">
       <div className="grid gap-8 justify-center w-full max-w-200 justify-self-center">
-        <img
-          src={recipe?.image?.url}
-          alt={recipe?.image?.alt}
-          className="mb-4 w-full max-w-150 h-auto rounded-lg object-cover justify-self-center"
+        <RecipeImage
+          src={recipe.image?.url}
+          alt={recipe.image?.alt}
+          title={recipe.title}
+          className="mb-4 w-full max-w-150 aspect-video justify-self-center"
+          imageClassName="h-full w-full rounded-lg object-cover"
+          fallbackClassName="h-full w-full"
+          fallbackTextClassName="text-7xl"
         />
 
         <div className="mb-4 flex items-center gap-3 justify-self-center">
