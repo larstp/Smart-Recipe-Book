@@ -43,8 +43,8 @@ The repository contains unmerged branches kept for posterity. Because the origin
 
 ### Pull Request Archive
 
-- [add-edit-and-delete-pantry-items #18](documentation/screenshots/pull-requests/add-edit-and-delete-pantry-items-18.md)
-- [feature-add-comment #22](documentation/screenshots/pull-requests/feature-add-comment-22.md)
+- [add-edit-and-delete-pantry-items #18](documentation/screenshots/pull-requests/add-edit-and-delete-pantry-items-18.png)
+- [feature-add-comment #22](documentation/screenshots/pull-requests/feature-add-comment-22.png)
 
 ---
 
