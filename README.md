@@ -99,7 +99,7 @@ npm run build-storybook  # Build a static Storybook site
 
 <table>
   <tr>
-    <td align="center"><img src="https://avatars.githubusercontent.com/u/31161694?v=4" alt="larstp profile picture" width="64" height="64" style="border-radius:50%"><br><a href="https://github.com/larstp">larstp</a><br><sub>Me</sub></td>
+    <td align="center"><img src="https://avatars.githubusercontent.com/u/31161694?v=4" alt="larstp profile picture" width="64" height="64" style="border-radius:100%"><br><a href="https://github.com/larstp">larstp</a></td>
     <td align="center"><img src="https://avatars.githubusercontent.com/u/94002041?v=4" alt="emmelinlarina profile picture" width="64" height="64" style="border-radius:50%"><br><a href="https://github.com/emmelinlarina">emmelinlarina</a></td>
     <td align="center"><img src="https://avatars.githubusercontent.com/u/127958662?v=4" alt="telecasteren profile picture" width="64" height="64" style="border-radius:50%"><br><a href="https://github.com/telecasteren">telecasteren</a></td>
     <td align="center"><img src="https://avatars.githubusercontent.com/u/185394804?v=4" alt="jb12-art profile picture" width="64" height="64" style="border-radius:50%"><br><a href="https://github.com/jb12-art">jb12-art</a></td>
